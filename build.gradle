@@ -1,0 +1,27 @@
+
+
+buildscript {
+    repositories {
+        google()// Google's Maven repository
+        jcenter()
+        
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+
+        //fireBase
+        classpath 'com.google.gms:google-services:4.3.2'// Google Services plugin
+    }
+}
+
+allprojects {
+    repositories {
+        google() // Google's Maven repository
+        jcenter()
+        
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

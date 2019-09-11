@@ -8,8 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     
-    <style name="CustomTheme" parent="AppTheme">
-        <item name="android:windowBackground">@android:color/white</item>
+    <style name="CustomTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/registration_image</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

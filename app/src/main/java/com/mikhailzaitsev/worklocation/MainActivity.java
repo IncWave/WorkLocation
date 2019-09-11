@@ -68,7 +68,7 @@ public class MainActivity extends FragmentActivity{
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
-                Toast.makeText(this, "" + response.getError().getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "" + response.getError().getMessage(),Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -76,13 +76,13 @@ public class MainActivity extends FragmentActivity{
 
     public void onClickOrientation(View view) {
         switch (view.getId()){
-            case R.id.go_zero_fragment:
+            case R.id.go_zero_fragment_button:
                 viewPager.setCurrentItem(0);
                 break;
-            case R.id.go_first_fragment:
+            case R.id.go_first_fragment_button:
                 viewPager.setCurrentItem(1);
                 break;
-            case R.id.go_second_fragment:
+            case R.id.go_second_fragment_button:
                 viewPager.setCurrentItem(2);
                 break;
         }

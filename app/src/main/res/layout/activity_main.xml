@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -10,24 +11,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="9dp">
-        <Button
-            android:id="@+id/go_zero_fragment"
+        <ImageButton
+            android:id="@+id/go_zero_fragment_button"
             android:onClick="onClickOrientation"
+            android:src="@drawable/list_grey36dp"
+            android:backgroundTint="@color/colorWhite"
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/go_first_fragment"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/go_to_the_list_of_rooms" />
+        <ImageButton
+            android:id="@+id/go_first_fragment_button"
             android:onClick="onClickOrientation"
+            android:src="@drawable/map_pin36dp"
+            android:backgroundTint="@color/colorWhite"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/go_second_fragment"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/go_to_the_map" />
+        <ImageButton
+            android:id="@+id/go_second_fragment_button"
             android:onClick="onClickOrientation"
+            android:src="@drawable/chart_grey36dp"
+            android:backgroundTint="@color/colorWhite"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/go_to_the_statistic" />
     </RelativeLayout>
 
     <androidx.viewpager.widget.ViewPager

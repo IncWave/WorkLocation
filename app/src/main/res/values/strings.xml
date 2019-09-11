@@ -3,4 +3,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="go_to_the_list_of_rooms">go to the list of rooms</string>
+    <string name="go_to_the_map">go to the map</string>
+    <string name="go_to_the_statistic">go to the statistic</string>
 </resources>

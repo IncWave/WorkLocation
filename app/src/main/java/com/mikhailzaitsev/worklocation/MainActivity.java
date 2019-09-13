@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity{
         showSignInActivity();
 
         //ViewPager find and init
-        viewPager = findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.activity_main_view_pager);
         viewPager.setAdapter(new CustomPagerAdapter(getSupportFragmentManager()));
     }
 
@@ -76,13 +76,13 @@ public class MainActivity extends FragmentActivity{
 
     public void onClickOrientation(View view) {
         switch (view.getId()){
-            case R.id.go_zero_fragment_button:
+            case R.id.activity_main_go_zero_fragment_button:
                 viewPager.setCurrentItem(0);
                 break;
-            case R.id.go_first_fragment_button:
+            case R.id.activity_main_go_first_fragment_button:
                 viewPager.setCurrentItem(1);
                 break;
-            case R.id.go_second_fragment_button:
+            case R.id.activity_main_go_second_fragment_button:
                 viewPager.setCurrentItem(2);
                 break;
         }

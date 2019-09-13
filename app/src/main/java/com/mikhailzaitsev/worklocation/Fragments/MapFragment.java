@@ -4,7 +4,6 @@ package com.mikhailzaitsev.worklocation.Fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,8 +14,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.mikhailzaitsev.worklocation.R;
 
 
@@ -45,7 +42,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MapView mapView = view.findViewById(R.id.map);
+        MapView mapView = view.findViewById(R.id.fragment_map_mapview);
         if (mapView != null){
             mapView.onCreate(null);
             mapView.onResume();

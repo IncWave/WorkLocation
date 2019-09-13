@@ -7,12 +7,12 @@
     tools:context=".MainActivity">
 
     <RelativeLayout
-        android:id="@+id/container_for_buttons"
+        android:id="@+id/activity_main_container_for_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="9dp">
         <ImageButton
-            android:id="@+id/go_zero_fragment_button"
+            android:id="@+id/activity_main_go_zero_fragment_button"
             android:onClick="onClickOrientation"
             android:src="@drawable/list_grey36dp"
             android:backgroundTint="@color/colorWhite"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/go_to_the_list_of_rooms" />
         <ImageButton
-            android:id="@+id/go_first_fragment_button"
+            android:id="@+id/activity_main_go_first_fragment_button"
             android:onClick="onClickOrientation"
             android:src="@drawable/map_pin36dp"
             android:backgroundTint="@color/colorWhite"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/go_to_the_map" />
         <ImageButton
-            android:id="@+id/go_second_fragment_button"
+            android:id="@+id/activity_main_go_second_fragment_button"
             android:onClick="onClickOrientation"
             android:src="@drawable/chart_grey36dp"
             android:backgroundTint="@color/colorWhite"
@@ -41,10 +41,10 @@
     </RelativeLayout>
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+        android:id="@+id/activity_main_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/container_for_buttons"/>
+        android:layout_below="@id/activity_main_container_for_buttons"/>
 
 
 </RelativeLayout>

@@ -6,4 +6,6 @@
     <string name="go_to_the_list_of_rooms">go to the list of rooms</string>
     <string name="go_to_the_map">go to the map</string>
     <string name="go_to_the_statistic">go to the statistic</string>
+    <string name="photo">photo</string>
+    <string name="is_online">is online?</string>
 </resources>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.RoomsFragment">
+    tools:context=".Fragments.GroupsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:paddingLeft="2dp"
         android:paddingRight="2dp">
         <ExpandableListView
-            android:id="@+id/fragment_room_expendable_listview"
+            android:id="@+id/fragment_group_expendable_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_white">
@@ -29,14 +29,14 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/margin18dp">
         <ImageButton
-            android:id="@+id/fragment_room_delete_button"
+            android:id="@+id/fragment_group_delete_button"
             android:src="@drawable/clear_white_48dp"
             android:background="@drawable/button_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin18dp"/>
         <ImageButton
-            android:id="@+id/fragment_room_add_button"
+            android:id="@+id/fragment_group_add_button"
             android:src="@drawable/add_white_48dp"
             android:background="@drawable/button_background"
             android:layout_width="wrap_content"

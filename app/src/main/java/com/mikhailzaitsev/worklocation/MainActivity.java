@@ -18,7 +18,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mikhailzaitsev.worklocation.Fragments.MapFragment;
-import com.mikhailzaitsev.worklocation.Fragments.RoomsFragment;
+import com.mikhailzaitsev.worklocation.Fragments.GroupsFragment;
 import com.mikhailzaitsev.worklocation.Fragments.StatisticFragment;
 
 import java.util.Arrays;
@@ -98,7 +98,7 @@ public class MainActivity extends FragmentActivity{
         @Override
         public Fragment getItem(int position) {
             switch (position){
-                case 0: return RoomsFragment.newInstance("Second");
+                case 0: return GroupsFragment.newInstance("Second");
                 case 2: return StatisticFragment.newInstance("Third");
                 case 1:
                 default: return MapFragment.newInstance("First");

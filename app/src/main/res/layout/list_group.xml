@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/list_group_name"
+        tools:text="Name Of The Room"
+        android:textSize="20sp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="27dp"
+        android:paddingBottom="@dimen/margin9dp"
+        android:paddingTop="@dimen/margin9dp"/>
+
+    <TextView
+        android:id="@+id/list_group_number_of_online"
+        tools:text="14/38"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingEnd="9dp"/>
+
+    <CheckBox
+        android:id="@+id/list_group_checkbox"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

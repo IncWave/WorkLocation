@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_bigx60dp">60dp</dimen>
+    <dimen name="button_bigx60dp_radius">30dp</dimen>
+
+    <dimen name="button_big48dp">48dp</dimen>
+    <dimen name="button_big48dp_radius">24dp</dimen>
+
+    <dimen name="button_med36dp">36dp</dimen>
+    <dimen name="button_med36dp_radius">18dp</dimen>
+
+    <dimen name="margin9dp">9dp</dimen>
+    <dimen name="margin18dp">18dp</dimen>
+
+    <dimen name="stroke_width">2dp</dimen>
+</resources>

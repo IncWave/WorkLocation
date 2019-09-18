@@ -90,7 +90,7 @@ public class MainActivity extends FragmentActivity{
 
     private class CustomPagerAdapter extends FragmentPagerAdapter{
 
-        public CustomPagerAdapter(@NonNull FragmentManager fm) {
+        CustomPagerAdapter(@NonNull FragmentManager fm) {
             super(fm);
         }
 
@@ -101,7 +101,7 @@ public class MainActivity extends FragmentActivity{
                 case 0: return GroupsFragment.newInstance("Second");
                 case 2: return StatisticFragment.newInstance("Third");
                 case 1:
-                default: return MapFragment.newInstance("First");
+                default: return MapFragment.newInstance();
             }
         }
 
@@ -111,5 +111,8 @@ public class MainActivity extends FragmentActivity{
             return 3;
         }
     }
+
+
+
 
 }

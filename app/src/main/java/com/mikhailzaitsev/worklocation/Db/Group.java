@@ -1,11 +1,16 @@
 package com.mikhailzaitsev.worklocation.Db;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.util.ArrayList;
 
-public class Group {
+public class Group implements Parcelable {
+    private int radius;
     private String groupId;
     private String groupName;
+    private double latitude;
+    private double longitude;
     private ArrayList<Member> members;
 
     public void deleteGroupOrItem(ArrayList<Group> groupArrayList, int g){
@@ -17,24 +22,43 @@ public class Group {
 
     public static ArrayList<Group> makeGroup(){
         ArrayList<Group> groupArrayList = new ArrayList<>();
-        groupArrayList.add(new Group("000","zero",Member.makeMember()));
-        groupArrayList.add(new Group("001","first",Member.makeMember()));
-        groupArrayList.add(new Group("002","second",Member.makeMember()));
-        groupArrayList.add(new Group("003","third",Member.makeMember()));
+        groupArrayList.add(new Group("000","zero",Member.makeMember(),53.897124,27.513986,15));
+        groupArrayList.add(new Group("001","first",Member.makeMember(),53.894841,27.509496,20));
+        groupArrayList.add(new Group("002","second",Member.makeMember(),53.897546,27.520649,40));
+        groupArrayList.add(new Group("003","third",Member.makeMember(),53.899595,27.515158,80));
         return groupArrayList;
     }
 
-    private Group(String groupId, String groupName, ArrayList<Member> members){
+    private Group(String groupId, String groupName, ArrayList<Member> members,double latitude, double longitude,int radius){
         setGroupId(groupId);
-        setMembers(members);
         setGroupName(groupName);
+        setMembers(members);
+        setLatitude(latitude);
+        setLongitude(longitude);
+        setRadius(radius);
     }
 
+    private Group(String groupName, double latitude, double longitude, int radius){
+        this.groupName = groupName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.radius = radius;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
     public String getGroupId() {
         return groupId;
     }
+    public double getLatitude() {
+        return latitude;
+    }
     public String getGroupName() {
         return groupName;
+    }
+    public double getLongitude() {
+        return longitude;
     }
     public ArrayList<Member> getMembers() {
         return members;
@@ -43,8 +67,17 @@ public class Group {
         return this.members.size();
     }
 
+    private void setRadius(int radius) {
+        this.radius = radius;
+    }
     private void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+    private void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+    private void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
     private void setGroupName(String groupName) {
         this.groupName = groupName;
@@ -52,6 +85,35 @@ public class Group {
     private void setMembers(ArrayList<Member> members) {
         this.members = members;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(groupName);
+        parcel.writeInt(radius);
+        parcel.writeValue(latitude);
+        parcel.writeValue(longitude);
+    }
+
+    public static final Creator<Group> CREATOR = new Creator<Group>() {
+        @Override
+        public Group createFromParcel(Parcel parcel) {
+            String groupName = parcel.readString();
+            int radius = parcel.readInt();
+            double latitude = parcel.readDouble();
+            double longitude = parcel.readDouble();
+            return new Group(groupName, latitude, longitude, radius);
+        }
+
+        @Override
+        public Group[] newArray(int i) {
+            return new Group[0];
+        }
+    };
 
     public static class Member {
         private boolean memberIsOnline;

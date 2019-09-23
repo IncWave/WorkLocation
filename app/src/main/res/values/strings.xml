@@ -11,4 +11,5 @@
     <string name="why">Зачем нам разрешение?</string>
     <string name="WhyMessage">Поскольку приложение завязано на геолокации, без него приложение не будет работать корректно. И не волнуйтесь, данные о вашем местоположении нигде не будут сохраняться)</string>
     <string name="ok">Понятно</string>
+    <string name="save">save</string>
 </resources>

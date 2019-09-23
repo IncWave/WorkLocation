@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -28,6 +29,9 @@ public class MainActivity extends FragmentActivity{
 
     private static final int REQUEST_CODE = 969;
     List<AuthUI.IdpConfig> providers;
+    private ImageButton goSecondFragmentButton;
+    private ImageButton goFirstFragmentButton;
+    private ImageButton goZeroFragmentButton;
     private ViewPager viewPager;
 
     @Override
@@ -39,6 +43,10 @@ public class MainActivity extends FragmentActivity{
         providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(), //Email Builder
                 new  AuthUI.IdpConfig.GoogleBuilder().build()); //Google Builder
         showSignInActivity();
+
+        goZeroFragmentButton = findViewById(R.id.activity_main_go_zero_fragment_button);
+        goFirstFragmentButton = findViewById(R.id.activity_main_go_first_fragment_button);
+        goSecondFragmentButton = findViewById(R.id.activity_main_go_second_fragment_button);
 
         //ViewPager find and init
         viewPager = findViewById(R.id.activity_main_view_pager);
@@ -78,12 +86,21 @@ public class MainActivity extends FragmentActivity{
         switch (view.getId()){
             case R.id.activity_main_go_zero_fragment_button:
                 viewPager.setCurrentItem(0);
+                goZeroFragmentButton.setImageResource(R.drawable.list_36dp);
+                goFirstFragmentButton.setImageResource(R.drawable.map_pin_grey36dp);
+                goSecondFragmentButton.setImageResource(R.drawable.chart_grey36dp);
                 break;
             case R.id.activity_main_go_first_fragment_button:
                 viewPager.setCurrentItem(1);
+                goZeroFragmentButton.setImageResource(R.drawable.list_grey36dp);
+                goFirstFragmentButton.setImageResource(R.drawable.map_pin_36dp);
+                goSecondFragmentButton.setImageResource(R.drawable.chart_grey36dp);
                 break;
             case R.id.activity_main_go_second_fragment_button:
                 viewPager.setCurrentItem(2);
+                goZeroFragmentButton.setImageResource(R.drawable.list_grey36dp);
+                goFirstFragmentButton.setImageResource(R.drawable.map_pin_grey36dp);
+                goSecondFragmentButton.setImageResource(R.drawable.chart_36dp);
                 break;
         }
     }

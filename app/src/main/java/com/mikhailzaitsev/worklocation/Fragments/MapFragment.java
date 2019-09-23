@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SeekBar;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.Db.Group;
 import com.mikhailzaitsev.worklocation.R;
 
@@ -40,23 +42,35 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
    private GoogleMap googleMap;
    private SeekBar seekBar;
    private Marker marker;
-   private ArrayList<Group> arrayListGroups;
+   private Button saveButton;
+   private ArrayList <Circle> circleArrayList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //if (getArguments() != null) {
        // }
-        arrayListGroups = Group.makeGroup();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        saveButton = view.findViewById(R.id.fragment_map_save_button);
         seekBar = view.findViewById(R.id.fragment_map_change_radius);
+
+        saveButton = view.findViewById(R.id.fragment_map_save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Db.saveCircleChanges(circleArrayList);
+            }
+        });
+
         return view;
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -91,11 +105,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void initialiseMap(){
+        circleArrayList = new ArrayList<>();
+        ArrayList<Group> arrayListGroups = Db.createDb();
         for (int i = 0; i<arrayListGroups.size(); i++ )
-            drawCircle(new LatLng(arrayListGroups.get(i).getLatitude(),
+            circleArrayList.add(drawCircle(new LatLng(arrayListGroups.get(i).getLatitude(),
                             arrayListGroups.get(i).getLongitude()),
                     arrayListGroups.get(i).getRadius(),
-                    arrayListGroups.get(i).getGroupName());
+                    arrayListGroups.get(i).getGroupName()));
     }
 
     private void getLocationPermission(){
@@ -155,42 +171,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         drawCircle(new LatLng(location.getLatitude(),location.getLongitude()),100, "THIS IS NAME");
     }
 
-    private void drawCircle(LatLng point, int radius, final String name){
+    private Circle drawCircle(LatLng point, int radius, final String name){
 
-        googleMap.addCircle(new CircleOptions()
+        Circle circle = googleMap.addCircle(new CircleOptions()
                         .center(point)
                         .radius(radius)
                         .clickable(true));
 
+        drawMarker(circle,name);
+
         googleMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
             @Override
             public void onCircleClick(final Circle circle) {
-                if (marker != null){
-                    marker.remove();
-                }
-                marker = googleMap
-                        .addMarker(new MarkerOptions()
-                                .position(circle.getCenter())
-                                .draggable(true)
-                                .title(name));
-                marker.setTag(circle);
-
-                googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                    @Override
-                    public void onMarkerDragStart(Marker marker) {
-                        circle.setCenter(marker.getPosition());
-                    }
-
-                    @Override
-                    public void onMarkerDrag(Marker marker) {
-                        circle.setCenter(marker.getPosition());
-                    }
-
-                    @Override
-                    public void onMarkerDragEnd(Marker marker) {
-                        circle.setCenter(marker.getPosition());
-                    }
-                });
 
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
@@ -212,6 +204,37 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     }
                 });
                 seekBar.setProgress((int)circle.getRadius());
+            }
+        });
+        return circle;
+    }
+
+    private void drawMarker(final Circle circle, String name){
+        marker = googleMap
+                .addMarker(new MarkerOptions()
+                        .position(circle.getCenter())
+                        .draggable(true)
+                        .title(name));
+        marker.setTag(circle);
+
+        googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Circle circle1 = (Circle) marker.getTag();
+                circle1.setCenter(marker.getPosition());
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                Circle circle1 = (Circle) marker.getTag();
+                circle1.setCenter(marker.getPosition());
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                Circle circle1 = (Circle) marker.getTag();
+                circle1.setCenter(marker.getPosition());
             }
         });
     }

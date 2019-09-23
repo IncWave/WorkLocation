@@ -30,7 +30,7 @@
         android:layout_margin="@dimen/margin18dp">
         <ImageButton
             android:id="@+id/fragment_group_delete_button"
-            android:src="@drawable/clear_white_48dp"
+            android:src="@drawable/clear_white48dp"
             android:background="@drawable/button_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

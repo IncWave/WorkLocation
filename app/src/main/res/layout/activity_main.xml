@@ -14,7 +14,7 @@
         <ImageButton
             android:id="@+id/activity_main_go_zero_fragment_button"
             android:onClick="onClickOrientation"
-            android:src="@drawable/list_grey36dp"
+            android:src="@drawable/list_36dp"
             android:backgroundTint="@color/colorWhite"
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
         <ImageButton
             android:id="@+id/activity_main_go_first_fragment_button"
             android:onClick="onClickOrientation"
-            android:src="@drawable/map_pin36dp"
+            android:src="@drawable/map_pin_grey36dp"
             android:backgroundTint="@color/colorWhite"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"

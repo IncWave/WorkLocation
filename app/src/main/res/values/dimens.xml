@@ -12,5 +12,5 @@
     <dimen name="margin9dp">9dp</dimen>
     <dimen name="margin18dp">18dp</dimen>
 
-    <dimen name="stroke_width">2dp</dimen>
+    <dimen name="stroke_width">4dp</dimen>
 </resources>

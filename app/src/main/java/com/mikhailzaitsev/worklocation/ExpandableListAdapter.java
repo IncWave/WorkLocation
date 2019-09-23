@@ -1,11 +1,13 @@
 package com.mikhailzaitsev.worklocation;
 
 import android.content.Context;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,8 +20,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<Group> groupArrayList;
     private boolean deleteButtonPushed = false;
-    private ArrayList<Integer> listOfChoosedGroups;
-    private ArrayList<ArrayList<Integer>> listOfChoosedItems;
+    private static SparseArray <ArrayList<Integer>> listOfChoosedItems;
 
     public ExpandableListAdapter(Context context, ArrayList<Group> groupArrayList) {
         this.context = context;
@@ -68,30 +69,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
+    public View getGroupView(int groupN, boolean b, View view, ViewGroup viewGroup) {
         if (view == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_group,null);
         }
         TextView groupName = view.findViewById(R.id.list_group_name);
-        groupName.setText(getGroup(i).getGroupName());
+        groupName.setText(getGroup(groupN).getGroupName());
 
         TextView groupNumberOfMembers = view.findViewById(R.id.list_group_number_of_online);
-        String numOfOnlineAndOffline = findOutHowManyMembersAreOnline(getGroup(i)) + " / " + getGroup(i).getMemberSize();
+        String numOfOnlineAndOffline = findOutHowManyMembersAreOnline(getGroup(groupN)) + " / " + getGroup(groupN).getMemberSize();
         groupNumberOfMembers.setText(numOfOnlineAndOffline);
-
-        CheckBox groupCheckBox = view.findViewById(R.id.list_group_checkbox);
-        if (deleteButtonPushed){
-            groupCheckBox.setVisibility(View.VISIBLE);
-        }else {
-            groupCheckBox.setVisibility(View.GONE);
-        }
-
-        groupCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
 
         return view;
     }
@@ -109,49 +97,71 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
+    public View getChildView(final int groupN, final int itemN, boolean b, View view, ViewGroup viewGroup) {
         if (view == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_item,null);
         }
 
         TextView itemNameTextView = view.findViewById(R.id.list_item_name);
-        itemNameTextView.setText(getGroup(i).getMembers().get(i1).getMemberName());
+        itemNameTextView.setText(getGroup(groupN).getMembers().get(itemN).getMemberName());
 
         ImageView isOnlineImageView = view.findViewById(R.id.list_item_online);
-        if (getGroup(i).getMembers().get(i1).isOnline()){
+        if (getGroup(groupN).getMembers().get(itemN).isOnline()){
             isOnlineImageView.setImageResource(R.drawable.is_online18dp);
         }else {
-            isOnlineImageView.setImageResource(R.drawable.is_not_online_18dp);
+            isOnlineImageView.setImageResource(R.drawable.is_not_online18dp);
         }
 
-        CheckBox itemCheckBox = view.findViewById(R.id.list_item_checkbox);
+        final CheckBox itemCheckBox = view.findViewById(R.id.list_item_checkbox);
+        itemCheckBox.setTag(new NewTag(groupN, groupN));
         if (deleteButtonPushed){
             itemCheckBox.setVisibility(View.VISIBLE);
         }else {
             itemCheckBox.setVisibility(View.GONE);
         }
 
-        itemCheckBox.setOnClickListener(new View.OnClickListener() {
+        itemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onCheckedChanged(CompoundButton view, boolean is) {
+                if (is){
+                    NewTag newTag = (NewTag) view.getTag();
+                    if (listOfChoosedItems == null || listOfChoosedItems.get(newTag.groupN) == null){
+                        ArrayList<Integer> firstItem = new ArrayList<>();
+                        firstItem.add(newTag.itemN);
+                        listOfChoosedItems = new SparseArray<>();
+                        listOfChoosedItems.put(newTag.groupN, firstItem);
+                    }else {
+                        listOfChoosedItems.get(newTag.groupN).add(newTag.itemN);
+                    }
+                }
             }
         });
+
         return view;
     }
 
     public void theDeleteButtonChanged(){
-        if (deleteButtonPushed){
-            deleteButtonPushed = false;
-        }else {
-            deleteButtonPushed = true;
-        }
+        deleteButtonPushed = !deleteButtonPushed;
         notifyDataSetChanged();
     }
 
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return true;
+    }
+
+    public static SparseArray <ArrayList<Integer>> getListOfChoosedItems(){
+        return listOfChoosedItems;
+    }
+
+    private class NewTag{
+        private int groupN;
+        private int itemN;
+
+        private NewTag(int groupN, int itemN) {
+            this.groupN = groupN;
+            this.itemN = itemN;
+        }
     }
 }

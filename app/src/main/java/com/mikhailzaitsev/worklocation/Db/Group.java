@@ -13,23 +13,8 @@ public class Group implements Parcelable {
     private double longitude;
     private ArrayList<Member> members;
 
-    public void deleteGroupOrItem(ArrayList<Group> groupArrayList, int g){
-        groupArrayList.remove(g);
-    }
-    public void deleteGroupOrItem(ArrayList<Group> groupArrayList, int g, int i){
-        groupArrayList.get(g).members.remove(i);
-    }
 
-    public static ArrayList<Group> makeGroup(){
-        ArrayList<Group> groupArrayList = new ArrayList<>();
-        groupArrayList.add(new Group("000","zero",Member.makeMember(),53.897124,27.513986,15));
-        groupArrayList.add(new Group("001","first",Member.makeMember(),53.894841,27.509496,20));
-        groupArrayList.add(new Group("002","second",Member.makeMember(),53.897546,27.520649,40));
-        groupArrayList.add(new Group("003","third",Member.makeMember(),53.899595,27.515158,80));
-        return groupArrayList;
-    }
-
-    private Group(String groupId, String groupName, ArrayList<Member> members,double latitude, double longitude,int radius){
+    Group(String groupId, String groupName, ArrayList<Member> members,double latitude, double longitude,int radius){
         setGroupId(groupId);
         setGroupName(groupName);
         setMembers(members);
@@ -67,22 +52,23 @@ public class Group implements Parcelable {
         return this.members.size();
     }
 
-    private void setRadius(int radius) {
+
+    void setRadius(int radius) {
         this.radius = radius;
     }
-    private void setGroupId(String groupId) {
+    void setGroupId(String groupId) {
         this.groupId = groupId;
     }
-    private void setLatitude(double latitude) {
+    void setLatitude(double latitude) {
         this.latitude = latitude;
     }
-    private void setLongitude(double longitude) {
+    void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-    private void setGroupName(String groupName) {
+    void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-    private void setMembers(ArrayList<Member> members) {
+    void setMembers(ArrayList<Member> members) {
         this.members = members;
     }
 
@@ -121,20 +107,7 @@ public class Group implements Parcelable {
         private String memberId;
         private Uri memberUri;
 
-        static private ArrayList<Member> makeMember(){
-            ArrayList<Member> array = new ArrayList<>();
-            array.add(new Member("0","mirt", Uri.parse("an"),true));
-            array.add(new Member("6","Tfg Lkcv", Uri.parse("antt"),true));
-            array.add(new Member("1","Oppp Sdfc", Uri.parse("an"),false));
-            array.add(new Member("2","Qwe trthh", Uri.parse("anq"),false));
-            array.add(new Member("3","Trytytr tty", Uri.parse("anw"),true));
-            array.add(new Member("5","Ter Tsd", Uri.parse("anrtrr"),false));
-            array.add(new Member("7","Zercf Ipopdfc", Uri.parse("anyy"),false));
-            array.add(new Member("4","Adfrtrey Trer", Uri.parse("aneere"),true));
-            return array;
-        }
-
-        private Member(String memberId, String memberName, Uri memberUri, boolean memberIsOnline){
+        Member(String memberId, String memberName, Uri memberUri, boolean memberIsOnline){
             setMemberName(memberName);
             setOnline(memberIsOnline);
             setMemberUri(memberUri);

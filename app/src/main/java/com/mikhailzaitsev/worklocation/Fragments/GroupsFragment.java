@@ -11,18 +11,22 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 
-import com.mikhailzaitsev.worklocation.Db.Group;
+import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.ExpandableListAdapter;
 import com.mikhailzaitsev.worklocation.R;
+
+import java.util.ArrayList;
 
 
 public class GroupsFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
-    private String mParam1;
+   // private String mParam1;
 
     private ExpandableListView listView;
     private ExpandableListAdapter listAdapter;
+    private ArrayList<Integer> numOfCheckedItems;
+    private boolean firstPressed = true;
 
 
     public GroupsFragment() {
@@ -30,18 +34,18 @@ public class GroupsFragment extends Fragment {
 
     public static GroupsFragment newInstance(String param1) {
         GroupsFragment fragment = new GroupsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
+        //Bundle args = new Bundle();
+        //args.putString(ARG_PARAM1, param1);
+        //fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-        }
+        //if (getArguments() != null) {
+          //  mParam1 = getArguments().getString(ARG_PARAM1);
+        //}
     }
 
     @Override
@@ -49,8 +53,9 @@ public class GroupsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group, container, false);
         listView = view.findViewById(R.id.fragment_group_expendable_listview);
-        listAdapter = new ExpandableListAdapter(getContext(), Group.makeGroup());
+        listAdapter = new ExpandableListAdapter(getContext(), Db.createDb());
         listView.setAdapter(listAdapter);
+
 
         ImageButton addButton = view.findViewById(R.id.fragment_group_add_button);
         ImageButton deleteButton = view.findViewById(R.id.fragment_group_delete_button);
@@ -68,7 +73,12 @@ public class GroupsFragment extends Fragment {
 
                         break;
                     case R.id.fragment_group_delete_button:
-                        listAdapter.theDeleteButtonChanged();
+                        if (firstPressed){
+                            listAdapter.theDeleteButtonChanged();
+                        }else {
+                            Db.deleteMember(ExpandableListAdapter.getListOfChoosedItems());
+                            listAdapter.theDeleteButtonChanged();
+                        }
                         break;
                 }
             }

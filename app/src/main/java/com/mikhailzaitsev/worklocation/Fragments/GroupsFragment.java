@@ -15,17 +15,14 @@ import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.ExpandableListAdapter;
 import com.mikhailzaitsev.worklocation.R;
 
-import java.util.ArrayList;
-
 
 public class GroupsFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
-   // private String mParam1;
+    //private String mParam1;
 
     private ExpandableListView listView;
     private ExpandableListAdapter listAdapter;
-    private ArrayList<Integer> numOfCheckedItems;
     private boolean firstPressed = true;
 
 
@@ -53,7 +50,7 @@ public class GroupsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group, container, false);
         listView = view.findViewById(R.id.fragment_group_expendable_listview);
-        listAdapter = new ExpandableListAdapter(getContext(), Db.createDb());
+        listAdapter = new ExpandableListAdapter(getContext(), Db.newInstance().getGroupArray());
         listView.setAdapter(listAdapter);
 
 
@@ -75,8 +72,13 @@ public class GroupsFragment extends Fragment {
                     case R.id.fragment_group_delete_button:
                         if (firstPressed){
                             listAdapter.theDeleteButtonChanged();
+                            firstPressed = !firstPressed;
                         }else {
-                            Db.deleteMember(ExpandableListAdapter.getListOfChoosedItems());
+                            if (ExpandableListAdapter.getListOfChoosedItems() != null) {
+                                Db.newInstance().deleteMember(ExpandableListAdapter.getListOfChoosedItems());
+                                ExpandableListAdapter.setNullListOfChoosedItems();
+                            }
+                            firstPressed = !firstPressed;
                             listAdapter.theDeleteButtonChanged();
                         }
                         break;

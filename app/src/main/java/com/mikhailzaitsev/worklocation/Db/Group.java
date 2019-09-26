@@ -5,16 +5,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.ArrayList;
 
-public class Group implements Parcelable {
+
+public class Group implements Parcelable{
     private int radius;
-    private String groupId;
+    private long groupId;
     private String groupName;
     private double latitude;
     private double longitude;
     private ArrayList<Member> members;
 
 
-    Group(String groupId, String groupName, ArrayList<Member> members,double latitude, double longitude,int radius){
+    Group(long groupId, String groupName, ArrayList<Member> members,double latitude, double longitude,int radius){
         setGroupId(groupId);
         setGroupName(groupName);
         setMembers(members);
@@ -33,7 +34,7 @@ public class Group implements Parcelable {
     public int getRadius() {
         return radius;
     }
-    public String getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
     public double getLatitude() {
@@ -56,7 +57,7 @@ public class Group implements Parcelable {
     void setRadius(int radius) {
         this.radius = radius;
     }
-    void setGroupId(String groupId) {
+    void setGroupId(long groupId) {
         this.groupId = groupId;
     }
     void setLatitude(double latitude) {
@@ -104,10 +105,10 @@ public class Group implements Parcelable {
     public static class Member {
         private boolean memberIsOnline;
         private String memberName;
-        private String memberId;
+        private long memberId;
         private Uri memberUri;
 
-        Member(String memberId, String memberName, Uri memberUri, boolean memberIsOnline){
+        Member(long memberId, String memberName, Uri memberUri, boolean memberIsOnline){
             setMemberName(memberName);
             setOnline(memberIsOnline);
             setMemberUri(memberUri);
@@ -120,7 +121,7 @@ public class Group implements Parcelable {
         public String getMemberName() {
             return memberName;
         }
-        public String getMemberId() {
+        public long getMemberId() {
             return memberId;
         }
         public Uri getMemberUri() {
@@ -136,7 +137,7 @@ public class Group implements Parcelable {
         private void setMemberUri(Uri memberUri) {
             this.memberUri = memberUri;
         }
-        private void setMemberId(String memberId) {
+        private void setMemberId(long memberId) {
             this.memberId = memberId;
         }
     }

@@ -51,6 +51,28 @@ public class MainActivity extends FragmentActivity{
         //ViewPager find and init
         viewPager = findViewById(R.id.activity_main_view_pager);
         viewPager.setAdapter(new CustomPagerAdapter(getSupportFragmentManager()));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:goZeroFragment();
+                        break;
+                    case 1:goFirstFragment();
+                        break;
+                    case 2:goSecondFragment();
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     private void showSignInActivity() {
@@ -86,23 +108,33 @@ public class MainActivity extends FragmentActivity{
         switch (view.getId()){
             case R.id.activity_main_go_zero_fragment_button:
                 viewPager.setCurrentItem(0);
-                goZeroFragmentButton.setImageResource(R.drawable.list_36dp);
-                goFirstFragmentButton.setImageResource(R.drawable.map_pin_grey36dp);
-                goSecondFragmentButton.setImageResource(R.drawable.chart_grey36dp);
+                goZeroFragment();
                 break;
             case R.id.activity_main_go_first_fragment_button:
                 viewPager.setCurrentItem(1);
-                goZeroFragmentButton.setImageResource(R.drawable.list_grey36dp);
-                goFirstFragmentButton.setImageResource(R.drawable.map_pin_36dp);
-                goSecondFragmentButton.setImageResource(R.drawable.chart_grey36dp);
+                goFirstFragment();
                 break;
             case R.id.activity_main_go_second_fragment_button:
                 viewPager.setCurrentItem(2);
-                goZeroFragmentButton.setImageResource(R.drawable.list_grey36dp);
-                goFirstFragmentButton.setImageResource(R.drawable.map_pin_grey36dp);
-                goSecondFragmentButton.setImageResource(R.drawable.chart_36dp);
+                goSecondFragment();
                 break;
         }
+    }
+
+    private void goZeroFragment(){
+        goZeroFragmentButton.setImageResource(R.drawable.list_36dp);
+        goFirstFragmentButton.setImageResource(R.drawable.map_pin_grey36dp);
+        goSecondFragmentButton.setImageResource(R.drawable.chart_grey36dp);
+    }
+    private void goFirstFragment(){
+        goZeroFragmentButton.setImageResource(R.drawable.list_grey36dp);
+        goFirstFragmentButton.setImageResource(R.drawable.map_pin_36dp);
+        goSecondFragmentButton.setImageResource(R.drawable.chart_grey36dp);
+    }
+    private void goSecondFragment(){
+        goZeroFragmentButton.setImageResource(R.drawable.list_grey36dp);
+        goFirstFragmentButton.setImageResource(R.drawable.map_pin_grey36dp);
+        goSecondFragmentButton.setImageResource(R.drawable.chart_36dp);
     }
 
     private class CustomPagerAdapter extends FragmentPagerAdapter{
@@ -110,15 +142,17 @@ public class MainActivity extends FragmentActivity{
         CustomPagerAdapter(@NonNull FragmentManager fm) {
             super(fm);
         }
-
         @NonNull
         @Override
         public Fragment getItem(int position) {
             switch (position){
-                case 0: return GroupsFragment.newInstance("Second");
-                case 2: return StatisticFragment.newInstance("Third");
+                case 2:
+                    return StatisticFragment.newInstance("Third");
                 case 1:
-                default: return MapFragment.newInstance();
+                    return MapFragment.newInstance();
+                default:
+                case 0:
+                    return GroupsFragment.newInstance("Second");
             }
         }
 

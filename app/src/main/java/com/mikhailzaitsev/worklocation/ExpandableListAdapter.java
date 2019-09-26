@@ -55,22 +55,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int i) {
-        return i;
+        return getGroup(i).getGroupId();
     }
 
     @Override
     public long getChildId(int i, int i1) {
-        return i1;
+        return getChild(i, i1).getMemberId();
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
     public View getGroupView(int groupN, boolean b, View view, ViewGroup viewGroup) {
-        if (view == null){
+        if(view == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_group,null);
         }
@@ -113,8 +113,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             isOnlineImageView.setImageResource(R.drawable.is_not_online18dp);
         }
 
-        final CheckBox itemCheckBox = view.findViewById(R.id.list_item_checkbox);
-        itemCheckBox.setTag(new NewTag(groupN, groupN));
+        CheckBox itemCheckBox = view.findViewById(R.id.list_item_checkbox);
+        if (listOfChoosedItems == null){
+            itemCheckBox.setChecked(false);
+        }
+        itemCheckBox.setTag(new NewTag(groupN, itemN));
         if (deleteButtonPushed){
             itemCheckBox.setVisibility(View.VISIBLE);
         }else {
@@ -124,20 +127,25 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         itemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton view, boolean is) {
+                NewTag newTag = (NewTag) view.getTag();
                 if (is){
-                    NewTag newTag = (NewTag) view.getTag();
-                    if (listOfChoosedItems == null || listOfChoosedItems.get(newTag.groupN) == null){
+                    if (listOfChoosedItems == null){
+                        listOfChoosedItems = new SparseArray<>();
+                    }
+                    if (listOfChoosedItems.get(newTag.groupN) == null){
                         ArrayList<Integer> firstItem = new ArrayList<>();
                         firstItem.add(newTag.itemN);
-                        listOfChoosedItems = new SparseArray<>();
                         listOfChoosedItems.put(newTag.groupN, firstItem);
                     }else {
                         listOfChoosedItems.get(newTag.groupN).add(newTag.itemN);
                     }
+                }else {
+                    if (listOfChoosedItems != null){
+                        listOfChoosedItems.get(newTag.groupN).remove((Integer) newTag.itemN);
+                    }
                 }
             }
         });
-
         return view;
     }
 
@@ -153,6 +161,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     public static SparseArray <ArrayList<Integer>> getListOfChoosedItems(){
         return listOfChoosedItems;
+    }
+    public static void setNullListOfChoosedItems(){
+        listOfChoosedItems = null;
     }
 
     private class NewTag{

@@ -45,6 +45,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
    private Button saveButton;
    private ArrayList <Circle> circleArrayList;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +64,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Db.saveCircleChanges(circleArrayList);
+                Db.newInstance().saveCircleChanges(circleArrayList);
             }
         });
 
@@ -106,7 +107,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private void initialiseMap(){
         circleArrayList = new ArrayList<>();
-        ArrayList<Group> arrayListGroups = Db.createDb();
+        ArrayList<Group> arrayListGroups = Db.newInstance().getGroupArray();
         for (int i = 0; i<arrayListGroups.size(); i++ )
             circleArrayList.add(drawCircle(new LatLng(arrayListGroups.get(i).getLatitude(),
                             arrayListGroups.get(i).getLongitude()),

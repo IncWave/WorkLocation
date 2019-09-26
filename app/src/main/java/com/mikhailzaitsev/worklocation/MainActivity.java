@@ -152,7 +152,7 @@ public class MainActivity extends FragmentActivity{
                     return MapFragment.newInstance();
                 default:
                 case 0:
-                    return GroupsFragment.newInstance("Second");
+                    return GroupsFragment.newInstance();
             }
         }
 

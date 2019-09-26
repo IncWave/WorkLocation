@@ -1,12 +1,10 @@
 package com.mikhailzaitsev.worklocation.Db;
 
 import android.net.Uri;
-import android.util.SparseArray;
 
 import com.google.android.gms.maps.model.Circle;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class Db {
@@ -23,9 +21,6 @@ public class Db {
     }
 
     public static Db newInstance() {
-        //Bundle args = new Bundle();
-        //Db fragment = new Db();
-        //fragment.setArguments(args);
         if (db == null){
             db = new Db();
             return db;
@@ -42,22 +37,12 @@ public class Db {
         }
     }
 
-    public void deleteMember(SparseArray<ArrayList<Integer>> listOfChoosedItems){
-        int listSize = listOfChoosedItems.size();
-        int i = 0;
-        while (listSize != 0){
-            if (listOfChoosedItems.get(i) == null) {
-                i++;
-                continue;
-            }
-            ArrayList<Integer> sortedList = listOfChoosedItems.get(i);
-            Collections.sort(sortedList);
-            Collections.reverse(sortedList);
-            for (int j : sortedList) {
-                groupArrayList.get(i).getMembers().remove(j);
-            }
-            listSize--;
-        }
+    public void deleteMember(int group, int member){
+                groupArrayList.get(group).getMembers().remove(member);
+    }
+
+    public void deleteGroup(int group){
+        groupArrayList.remove(group);
     }
 
     private void makeGroup(){

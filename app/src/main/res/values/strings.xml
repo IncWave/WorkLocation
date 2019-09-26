@@ -12,4 +12,11 @@
     <string name="WhyMessage">Поскольку приложение завязано на геолокации, без него приложение не будет работать корректно. И не волнуйтесь, данные о вашем местоположении нигде не будут сохраняться)</string>
     <string name="ok">Понятно</string>
     <string name="save">save</string>
+    <string name="it_is_delete_button">it is delete button</string>
+    <string name="it_is_add_button">it is add button</string>
+    <string name="it_is_edit_button">it is edit button</string>
+    <string name="sure_delete_m">Are you sure you want to delete this member?</string>
+    <string name="sure_delete_g">Are you sure you want to delete this group?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

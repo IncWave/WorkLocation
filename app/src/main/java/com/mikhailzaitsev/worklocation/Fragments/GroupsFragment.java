@@ -12,37 +12,29 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 
 import com.mikhailzaitsev.worklocation.Db.Db;
-import com.mikhailzaitsev.worklocation.ExpandableListAdapter;
 import com.mikhailzaitsev.worklocation.R;
 
 
 public class GroupsFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    //private String mParam1;
-
     private ExpandableListView listView;
     private ExpandableListAdapter listAdapter;
-    private boolean firstPressed = true;
-
+    private ImageButton deleteButton;
+    private ImageButton addButton;
+    private ImageButton editButton;
+    static boolean[] firstPressed = new boolean[]{true,true,true};
 
     public GroupsFragment() {
     }
 
-    public static GroupsFragment newInstance(String param1) {
+    public static GroupsFragment newInstance() {
         GroupsFragment fragment = new GroupsFragment();
-        //Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //if (getArguments() != null) {
-          //  mParam1 = getArguments().getString(ARG_PARAM1);
-        //}
     }
 
     @Override
@@ -54,10 +46,12 @@ public class GroupsFragment extends Fragment {
         listView.setAdapter(listAdapter);
 
 
-        ImageButton addButton = view.findViewById(R.id.fragment_group_add_button);
-        ImageButton deleteButton = view.findViewById(R.id.fragment_group_delete_button);
-        setOnClickListener(addButton, listAdapter);
+        deleteButton = view.findViewById(R.id.fragment_group_delete_button);
+        addButton = view.findViewById(R.id.fragment_group_add_button);
+        editButton = view.findViewById(R.id.fragment_group_edit_button);
         setOnClickListener(deleteButton, listAdapter);
+        setOnClickListener(addButton, listAdapter);
+        setOnClickListener(editButton, listAdapter);
         return view;
     }
 
@@ -66,23 +60,47 @@ public class GroupsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 switch (view.getId()){
-                    case R.id.fragment_group_add_button:
-
-                        break;
                     case R.id.fragment_group_delete_button:
-                        if (firstPressed){
-                            listAdapter.theDeleteButtonChanged();
-                            firstPressed = !firstPressed;
+                        if (firstPressed[0]){
+                            deleteButton.setImageResource(R.drawable.delete_pink_48dp);
+                            firstPressed[0] = !firstPressed[0];
+                            addButton.setEnabled(false);
+                            editButton.setEnabled(false);
                         }else {
-                            if (ExpandableListAdapter.getListOfChoosedItems() != null) {
-                                Db.newInstance().deleteMember(ExpandableListAdapter.getListOfChoosedItems());
-                                ExpandableListAdapter.setNullListOfChoosedItems();
-                            }
-                            firstPressed = !firstPressed;
-                            listAdapter.theDeleteButtonChanged();
+                            deleteButton.setImageResource(R.drawable.delete_grey_48dp);
+                            firstPressed[0] = !firstPressed[0];
+                            addButton.setEnabled(true);
+                            editButton.setEnabled(true);
+                        }
+                        break;
+                    case R.id.fragment_group_add_button:
+                        if (firstPressed[1]){
+                            addButton.setImageResource(R.drawable.add_pink_48dp);
+                            firstPressed[1] = !firstPressed[1];
+                            deleteButton.setEnabled(false);
+                            editButton.setEnabled(false);
+                        }else {
+                            addButton.setImageResource(R.drawable.add_grey_48dp);
+                            firstPressed[1] = !firstPressed[1];
+                            deleteButton.setEnabled(true);
+                            editButton.setEnabled(true);
+                        }
+                        break;
+                    case R.id.fragment_group_edit_button:
+                        if (firstPressed[2]){
+                            editButton.setImageResource(R.drawable.edit_pink_48dp);
+                            firstPressed[2] = !firstPressed[2];
+                            deleteButton.setEnabled(false);
+                            addButton.setEnabled(false);
+                        }else {
+                            editButton.setImageResource(R.drawable.edit_grey_48dp);
+                            firstPressed[2] = !firstPressed[2];
+                            deleteButton.setEnabled(true);
+                            addButton.setEnabled(true);
                         }
                         break;
                 }
+                listAdapter.theDeleteButtonChanged();
             }
         });
     }

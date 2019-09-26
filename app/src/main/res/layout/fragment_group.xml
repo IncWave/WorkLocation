@@ -30,18 +30,29 @@
         android:layout_margin="@dimen/margin18dp">
         <ImageButton
             android:id="@+id/fragment_group_delete_button"
-            android:src="@drawable/clear_white48dp"
-            android:background="@drawable/button_background"
+            android:src="@drawable/delete_grey_48dp"
+            android:background="@color/colorWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin18dp"/>
+            android:layout_marginEnd="@dimen/margin18dp"
+            android:contentDescription="@string/it_is_delete_button" />
         <ImageButton
             android:id="@+id/fragment_group_add_button"
-            android:src="@drawable/add_white_48dp"
-            android:background="@drawable/button_background"
+            android:src="@drawable/add_grey_48dp"
+            android:background="@color/colorWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin18dp"/>
+            android:layout_marginLeft="@dimen/margin18dp"
+            android:layout_marginRight="@dimen/margin18dp"
+            android:contentDescription="@string/it_is_add_button" />
+        <ImageButton
+            android:id="@+id/fragment_group_edit_button"
+            android:src="@drawable/edit_grey_48dp"
+            android:background="@color/colorWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin18dp"
+            android:contentDescription="@string/it_is_edit_button" />
     </LinearLayout>
 
 

@@ -4,5 +4,5 @@
 
     <size android:height="@dimen/button_big48dp"/>
     <size android:width="@dimen/button_big48dp"/>
-    <gradient android:startColor="@color/colorAccentLight"  android:endColor="@color/colorRed" android:angle="45" />
+    <gradient android:startColor="@color/colorGrey"  android:endColor="@color/colorWhite" android:angle="45" />
 </shape>

@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mikhailzaitsev.worklocation.Fragments.MapFragment;
@@ -29,6 +31,7 @@ public class MainActivity extends FragmentActivity{
 
     private static final int REQUEST_CODE = 969;
     List<AuthUI.IdpConfig> providers;
+    private GeofencingClient geofencingClient;
     private ImageButton goSecondFragmentButton;
     private ImageButton goFirstFragmentButton;
     private ImageButton goZeroFragmentButton;
@@ -43,6 +46,9 @@ public class MainActivity extends FragmentActivity{
         providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(), //Email Builder
                 new  AuthUI.IdpConfig.GoogleBuilder().build()); //Google Builder
         showSignInActivity();
+
+        //geofencingClient
+        geofencingClient = LocationServices.getGeofencingClient(this);
 
         goZeroFragmentButton = findViewById(R.id.activity_main_go_zero_fragment_button);
         goFirstFragmentButton = findViewById(R.id.activity_main_go_first_fragment_button);

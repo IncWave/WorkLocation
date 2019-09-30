@@ -24,4 +24,10 @@
         android:layout_gravity="center"
         android:paddingEnd="9dp"/>
 
+    <TextView
+        android:id="@+id/id_group"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

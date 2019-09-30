@@ -44,7 +44,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
    private Marker marker;
    private Button saveButton;
    private ArrayList <Circle> circleArrayList;
+   private ArrayList<Group> arrayListGroups;
 
+   private static MapFragment mapfragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,9 +88,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
 
     public static MapFragment newInstance() {
-        //Bundle args = new Bundle();
-        //fragment.setArguments(args);
-        return new MapFragment();
+        if (mapfragment == null){
+            mapfragment = new MapFragment();
+        }
+        return mapfragment;
     } //New Instance
 
     public MapFragment() {
@@ -105,14 +108,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         initialiseMap();
     }
 
-    private void initialiseMap(){
+    public void initialiseMap(){
+        if (googleMap != null){
+            googleMap.clear();
+        }
+        Circle circle;
         circleArrayList = new ArrayList<>();
-        ArrayList<Group> arrayListGroups = Db.newInstance().getGroupArray();
-        for (int i = 0; i<arrayListGroups.size(); i++ )
-            circleArrayList.add(drawCircle(new LatLng(arrayListGroups.get(i).getLatitude(),
+        arrayListGroups = Db.newInstance().getGroupArray();
+        for (int i = 0; i<arrayListGroups.size(); i++ ) {
+            circle = drawCircle(new LatLng(arrayListGroups.get(i).getLatitude(),
                             arrayListGroups.get(i).getLongitude()),
                     arrayListGroups.get(i).getRadius(),
-                    arrayListGroups.get(i).getGroupName()));
+                    arrayListGroups.get(i).getGroupName());
+            circle.setStrokeColor(R.color.colorAccent);
+            circle.setStrokeWidth(9);
+            circleArrayList.add(circle);
+        }
     }
 
     private void getLocationPermission(){

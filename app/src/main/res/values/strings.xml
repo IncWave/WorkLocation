@@ -19,4 +19,5 @@
     <string name="sure_delete_g">Are you sure you want to delete this group?</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="name">Name</string>
 </resources>

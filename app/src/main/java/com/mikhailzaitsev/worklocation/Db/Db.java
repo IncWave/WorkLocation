@@ -37,12 +37,41 @@ public class Db {
         }
     }
 
+
+
+
+    public String getGroupNameById(String id){
+        Long groupId = Long.valueOf(id);
+        for (int i = 0; i<groupArrayList.size(); i++){
+            if (groupId.equals(groupArrayList.get(i).getGroupId())){
+                return groupArrayList.get(i).getGroupName();
+            }
+        }
+        return "";
+    }
+
     public void deleteMember(int group, int member){
                 groupArrayList.get(group).getMembers().remove(member);
     }
 
-    public void deleteGroup(int group){
-        groupArrayList.remove(group);
+    public void deleteGroupById(String group){
+        Long id = Long.valueOf(group);
+        for (Group group1 : groupArrayList){
+            if (id.equals(group1.getGroupId())){
+                groupArrayList.remove(group1);
+                break;
+            }
+        }
+    }
+
+    public void changeGroupById(String groupId, String name){
+        Long id = Long.valueOf(groupId);
+        for (int i = 0; i<groupArrayList.size(); i++){
+            if (id.equals(groupArrayList.get(i).getGroupId())){
+                groupArrayList.get(i).setGroupName(name);
+                break;
+            }
+        }
     }
 
     private void makeGroup(){

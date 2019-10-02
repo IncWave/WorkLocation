@@ -1,4 +1,4 @@
-package com.mikhailzaitsev.worklocation.Fragments;
+package com.mikhailzaitsev.worklocation.Fragments.Additional;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,7 +17,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<Group> groupArrayList;
 
-    ExpandableListAdapter(Context context, ArrayList<Group> groupArrayList) {
+    public ExpandableListAdapter(Context context, ArrayList<Group> groupArrayList) {
         this.context = context;
         this.groupArrayList = groupArrayList;
     }
@@ -119,7 +119,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return view;
     }
 
-    void theDeleteButtonChanged(){
+    public void theDeleteButtonChanged(){
         notifyDataSetChanged();
     }
 }

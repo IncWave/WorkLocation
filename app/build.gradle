@@ -41,6 +41,8 @@ dependencies {
     //location
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
+    //notificaation
+    implementation "com.android.support:support-compat:29.0.0"
 }
 
 apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin

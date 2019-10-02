@@ -27,7 +27,7 @@ public class Db {
         }else { return db; }
     }
 
-    public void saveCircleChanges(ArrayList<Circle> circleArrayList){
+    public ArrayList<Group> saveCircleChanges(ArrayList<Circle> circleArrayList){
         Circle circle;
         for (int i=0; i<circleArrayList.size(); i++ ){
             circle = circleArrayList.get(i);
@@ -35,6 +35,7 @@ public class Db {
             groupArrayList.get(i).setLatitude(circle.getCenter().latitude);
             groupArrayList.get(i).setRadius((int)circle.getRadius());
         }
+        return groupArrayList;
     }
 
 
@@ -75,7 +76,7 @@ public class Db {
     }
 
     private void makeGroup(){
-        groupArrayList.add(new Group(0,"zero", makeMember(),53.897124,27.513986,15));
+        groupArrayList.add(new Group(0,"zero",makeMember(),53.894810,27.509498,100));
         groupArrayList.add(new Group(100,"first", makeMember1(),53.894841,27.509496,20));
         groupArrayList.add(new Group(200,"second", makeMember(),53.897546,27.520649,40));
         groupArrayList.add(new Group(300,"third", makeMember1(),53.899595,27.515158,80));

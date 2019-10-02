@@ -21,6 +21,8 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".Fragments.Additional.GeofenceBroadcastReceiver"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC2XB47jEJYCQN6c1b9VGUazAcFx06G4NM"/>

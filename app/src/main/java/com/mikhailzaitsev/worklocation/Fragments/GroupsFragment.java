@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mikhailzaitsev.worklocation.Db.Db;
+import com.mikhailzaitsev.worklocation.Fragments.Additional.ExpandableListAdapter;
 import com.mikhailzaitsev.worklocation.R;
 
 
@@ -81,6 +82,7 @@ public class GroupsFragment extends Fragment {
                 return false;
             }
         });
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
@@ -175,7 +177,7 @@ public class GroupsFragment extends Fragment {
                             firstPressed[2] = !firstPressed[2];
                             deleteButton.setEnabled(true);
                             addButton.setEnabled(true);
-                            MapFragment.newInstance().initialiseMap();
+                            MapFragment.newInstance().initMapWithMarkersAndCircles();
                         }
                         break;
                 }

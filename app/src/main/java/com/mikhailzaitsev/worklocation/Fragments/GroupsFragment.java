@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
@@ -82,7 +83,6 @@ public class GroupsFragment extends Fragment {
                 return false;
             }
         });
-
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
@@ -159,6 +159,7 @@ public class GroupsFragment extends Fragment {
                             editButton.setEnabled(false);
                             addButton.setImageResource(R.drawable.add_pink_48dp);
                             firstPressed[1] = !firstPressed[1];
+                            createChooseDialog();
                         }else {
                             addButton.setImageResource(R.drawable.add_grey_48dp);
                             firstPressed[1] = !firstPressed[1];
@@ -184,6 +185,45 @@ public class GroupsFragment extends Fragment {
                 listAdapter.theDeleteButtonChanged();
             }
         });
+    }
+
+    private void createChooseDialog(){
+        String [] choose = {"Group", "Member"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle("Add...").setItems(choose, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i){
+                            case 0:
+                                dialogInterface.dismiss();
+                                addButton.callOnClick();
+                                createAddGroupDialog();
+                                break;
+                            case 1:
+                                dialogInterface.dismiss();
+                            default:
+                                addButton.callOnClick();
+                                break;
+                        }
+                    }
+                });
+        builder.show();
+
+    }
+
+    private void createAddGroupDialog(){
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.add_group_dialog,null);
+        EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
+        Button okButton = dialogView.findViewById(R.id.add_group_dialog_ok);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //создание группы
+            }
+        });
+        builder1.setView(dialogView);
+        builder1.show();
     }
 
 }

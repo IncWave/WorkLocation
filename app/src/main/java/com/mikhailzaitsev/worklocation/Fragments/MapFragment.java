@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -180,6 +181,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         initMapWithGeofencings();
         initMapWithMarkersAndCircles();
+        FusedLocationProviderClient fusedLocation = LocationServices.getFusedLocationProviderClient(getContext());
+        Db.newInstance().setLocation(fusedLocation.getLastLocation().getResult());
     }
 
     public void initMapWithMarkersAndCircles(){
@@ -288,7 +291,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         return builder.build();
     }
 
-        private PendingIntent getGeofencePendingIntent(){
+    private PendingIntent getGeofencePendingIntent(){
         if (pendingIntent != null){
             return pendingIntent;
         }

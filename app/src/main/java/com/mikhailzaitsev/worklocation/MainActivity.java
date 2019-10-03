@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -31,11 +33,17 @@ public class MainActivity extends FragmentActivity{
 
     private static final int REQUEST_CODE = 969;
     List<AuthUI.IdpConfig> providers;
-    private GeofencingClient geofencingClient;
     private ImageButton goSecondFragmentButton;
     private ImageButton goFirstFragmentButton;
     private ImageButton goZeroFragmentButton;
     private ViewPager viewPager;
+
+    //current user
+    private static String currentUserId;
+    private static String currentUserName;
+    private static Uri currentUserUri;
+    private static Location currentUserLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,7 @@ public class MainActivity extends FragmentActivity{
         showSignInActivity();
 
         //geofencingClient
-        geofencingClient = LocationServices.getGeofencingClient(this);
+        GeofencingClient geofencingClient = LocationServices.getGeofencingClient(this);
 
         goZeroFragmentButton = findViewById(R.id.activity_main_go_zero_fragment_button);
         goFirstFragmentButton = findViewById(R.id.activity_main_go_first_fragment_button);
@@ -99,6 +107,9 @@ public class MainActivity extends FragmentActivity{
             if (resultCode == RESULT_OK){
                 // Successfully signed in, so Get User
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                setCurrentUserId(user.getIdToken(true).toString());
+                setCurrentUserName(user.getDisplayName());
+                setCurrentUserUri(user.getPhotoUrl());
             }
             else {
                 // Sign in failed. If response is null the user canceled the
@@ -171,5 +182,28 @@ public class MainActivity extends FragmentActivity{
 
 
 
-
+    public static String getCurrentUserId() {
+        return currentUserId;
+    }
+    private void setCurrentUserId(String currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+    public static String getCurrentUserName() {
+        return currentUserName;
+    }
+    private void setCurrentUserName(String currentUserName) {
+        this.currentUserName = currentUserName;
+    }
+    public static Uri getCurrentUserUri() {
+        return currentUserUri;
+    }
+    private void setCurrentUserUri(Uri currentUserUri) {
+        this.currentUserUri = currentUserUri;
+    }
+    private static Location getCurrentUserLocation(){
+        return currentUserLocation;
+    }
+    public void setCurrentUserLocation(Location currentUserLocation) {
+        MainActivity.currentUserLocation = currentUserLocation;
+    }
 }

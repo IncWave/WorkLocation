@@ -20,4 +20,7 @@
     <string name="yes">yes</string>
     <string name="no">no</string>
     <string name="name">Name</string>
+    <string name="member">Member</string>
+    <string name="group">Group</string>
+    <string name="your_group_name">Your Group name</string>
 </resources>

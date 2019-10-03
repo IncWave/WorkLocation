@@ -53,6 +53,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return getGroup(i).getGroupId();
     }
 
+
     @Override
     public long getChildId(int i, int i1) {
         return getChild(i, i1).getMemberId();

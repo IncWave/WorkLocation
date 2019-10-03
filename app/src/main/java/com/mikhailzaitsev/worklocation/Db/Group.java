@@ -107,14 +107,19 @@ public class Group implements Parcelable{
         private String memberName;
         private long memberId;
         private Uri memberUri;
+        private String memberIdFirebase;
 
-        Member(long memberId, String memberName, Uri memberUri, boolean memberIsOnline){
+        Member(long memberId, String memberName, Uri memberUri, boolean memberIsOnline, String memberIdFirebase) {
+            setMemberIdFirebase(memberIdFirebase);
             setMemberName(memberName);
             setOnline(memberIsOnline);
             setMemberUri(memberUri);
             setMemberId(memberId);
         }
 
+        public String getMemberIdFirebase() {
+            return memberIdFirebase;
+        }
         public boolean isOnline() {
             return memberIsOnline;
         }
@@ -128,6 +133,7 @@ public class Group implements Parcelable{
             return memberUri;
         }
 
+        private void setMemberIdFirebase(String memberIdFirebase) { this.memberIdFirebase = memberIdFirebase; }
         private void setOnline(boolean memberIsOnline) {
             this.memberIsOnline = memberIsOnline;
         }
@@ -140,5 +146,7 @@ public class Group implements Parcelable{
         private void setMemberId(long memberId) {
             this.memberId = memberId;
         }
+
+
     }
 }

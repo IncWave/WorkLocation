@@ -2,15 +2,21 @@ package com.mikhailzaitsev.worklocation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -29,7 +35,7 @@ import com.mikhailzaitsev.worklocation.Fragments.StatisticFragment;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends FragmentActivity {
 
     private static final int REQUEST_CODE = 969;
     List<AuthUI.IdpConfig> providers;
@@ -44,7 +50,6 @@ public class MainActivity extends FragmentActivity{
     private static Uri currentUserUri;
     private static Location currentUserLocation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +57,7 @@ public class MainActivity extends FragmentActivity{
 
         //Init and choose authentication providers
         providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(), //Email Builder
-                new  AuthUI.IdpConfig.GoogleBuilder().build()); //Google Builder
+                new AuthUI.IdpConfig.GoogleBuilder().build()); //Google Builder
         showSignInActivity();
 
         //geofencingClient
@@ -73,12 +78,15 @@ public class MainActivity extends FragmentActivity{
 
             @Override
             public void onPageSelected(int position) {
-                switch (position){
-                    case 0:goZeroFragment();
+                switch (position) {
+                    case 0:
+                        goZeroFragment();
                         break;
-                    case 1:goFirstFragment();
+                    case 1:
+                        goFirstFragment();
                         break;
-                    case 2:goSecondFragment();
+                    case 2:
+                        goSecondFragment();
                         break;
                 }
             }
@@ -95,21 +103,51 @@ public class MainActivity extends FragmentActivity{
                 .setAvailableProviders(providers)
                 .setTheme(R.style.CustomTheme)
                 .setLogo(R.drawable.logolian)
-                .build(),REQUEST_CODE);
+                .build(), REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE){
+        if (requestCode == REQUEST_CODE) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
-            if (resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
                 // Successfully signed in, so Get User
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 setCurrentUserId(user.getIdToken(true).toString());
                 setCurrentUserName(user.getDisplayName());
                 setCurrentUserUri(user.getPhotoUrl());
+                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+                    if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this,"This application cannot work without those permissions",Toast.LENGTH_LONG).show();
+                        showSignInActivity();
+                        return;
+                    }
+                }else if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) || PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)){
+                    Toast.makeText(this,"This application cannot work without those permissions",Toast.LENGTH_LONG).show();
+                    showSignInActivity();
+                    return;
+                }
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 43111, 50, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        GroupsFragment.newInstance().setCurrentLocation(location);
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+                    }
+                });
             }
             else {
                 // Sign in failed. If response is null the user canceled the

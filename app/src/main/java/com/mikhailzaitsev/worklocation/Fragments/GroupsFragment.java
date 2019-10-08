@@ -3,6 +3,7 @@ package com.mikhailzaitsev.worklocation.Fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -30,6 +31,7 @@ public class GroupsFragment extends Fragment {
     private ImageButton addButton;
     private ImageButton editButton;
     private static boolean[] firstPressed = new boolean[]{true,true,true};
+    private Location currentLocation;
 
     public GroupsFragment() {
     }
@@ -214,16 +216,24 @@ public class GroupsFragment extends Fragment {
     private void createAddGroupDialog(){
         AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
         View dialogView = getLayoutInflater().inflate(R.layout.add_group_dialog,null);
-        EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
+        final EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
         Button okButton = dialogView.findViewById(R.id.add_group_dialog_ok);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //создание группы
+                Db.newInstance().createGroup(currentLocation,editText.getText().toString(),50);
+
             }
         });
         builder1.setView(dialogView);
         builder1.show();
     }
 
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
+    }
 }

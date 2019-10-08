@@ -3,9 +3,6 @@ package com.mikhailzaitsev.worklocation.Db;
 import android.location.Location;
 import android.net.Uri;
 
-import androidx.fragment.app.Fragment;
-
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.mikhailzaitsev.worklocation.MainActivity;
 
@@ -16,8 +13,6 @@ import java.util.Calendar;
 public class Db {
     private static ArrayList<Group> groupArrayList;
     private static Db db;
-    private Group.Member currentUser;
-    private Location location;
 
     private Db() {
         if (groupArrayList == null){
@@ -85,7 +80,7 @@ public class Db {
         }
     }
 
-    public void createGroup(String groupName, int radius){
+    public void createGroup(Location location, String groupName, int radius){
         groupArrayList.add(new Group(
                 Math.round( + radius + Calendar.getInstance().getTimeInMillis())/41
                 ,groupName
@@ -93,19 +88,24 @@ public class Db {
                 ,location.getLatitude()
                 ,location.getLongitude()
                 ,radius));
-
+        /////////////////////////////////////////////////////////////////////////send to the server
     }
 
     private ArrayList<Group.Member> createMember(){
         ArrayList<Group.Member> array = new ArrayList<>();
         array.add(new Group.Member(Calendar.getInstance().getTimeInMillis()/41
                 ,MainActivity.getCurrentUserName()
-                ,MainActivity.getCurrentUserUri()
-                ,currentUser.isOnline(),MainActivity.getCurrentUserName()));
+                ,MainActivity.getCurrentUserUri(),
+                true
+                ,MainActivity.getCurrentUserId()));
         return array;
     }
 
-    public ArrayList<Group.Member> addMember(){
+    public ArrayList<Group.Member> addMembers(){
+        return null;////////////////////////////////////////////////////////////////////////
+    }
+
+    public ArrayList<Group> addGroups(){
         return null;////////////////////////////////////////////////////////////////////////
     }
 
@@ -192,6 +192,5 @@ public class Db {
     }
 
     public void setLocation(Location location) {
-        this.location = location;
     }
 }

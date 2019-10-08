@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -38,8 +37,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.Db.Group;
 import com.mikhailzaitsev.worklocation.Fragments.Additional.GeofenceBroadcastReceiver;
@@ -47,13 +44,7 @@ import com.mikhailzaitsev.worklocation.R;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
-import static androidx.core.content.ContextCompat.getSystemService;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
@@ -64,6 +55,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
    private SeekBar seekBar;
    private Marker marker;
    private Button saveButton;
+   private Button addButton;
    private ArrayList <Circle> circleArrayList;
    private ArrayList<Group> arrayListGroups;
 
@@ -144,21 +136,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        saveButton = view.findViewById(R.id.fragment_map_save_button);
         seekBar = view.findViewById(R.id.fragment_map_change_radius);
 
         saveButton = view.findViewById(R.id.fragment_map_save_button);
         saveButton.setVisibility(Button.INVISIBLE);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                arrayListGroups = Db.newInstance().saveCircleChanges(circleArrayList);
-                saveButton.setVisibility(View.INVISIBLE);
-                initMapWithGeofencings();
-            }
-        });
+        saveButton.setOnClickListener(onClick());
 
         return view;
+    }
+
+    View.OnClickListener onClick(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.fragment_map_save_button :
+                    break;
+                }
+            }
+        };
     }
 
     @Override
@@ -181,8 +177,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         initMapWithGeofencings();
         initMapWithMarkersAndCircles();
-        FusedLocationProviderClient fusedLocation = LocationServices.getFusedLocationProviderClient(getContext());
-        Db.newInstance().setLocation(fusedLocation.getLastLocation().getResult());
     }
 
     public void initMapWithMarkersAndCircles(){
@@ -291,7 +285,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         return builder.build();
     }
 
-    private PendingIntent getGeofencePendingIntent(){
+        private PendingIntent getGeofencePendingIntent(){
         if (pendingIntent != null){
             return pendingIntent;
         }

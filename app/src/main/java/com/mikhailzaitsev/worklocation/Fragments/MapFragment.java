@@ -138,8 +138,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         seekBar = view.findViewById(R.id.fragment_map_change_radius);
+        saveButton = view.findViewById(R.id.fragment_map_save_button);
+        saveButton.setVisibility(View.INVISIBLE);
+        saveButton.setOnClickListener(onClick());
         return view;
     }
+
+    private View.OnClickListener onClick(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveButton.setVisibility(View.INVISIBLE);
+                Db.newInstance().saveCirclesChanges(circleArrayList);
+                initMapWithGeofencings();
+                initMapWithMarkersAndCircles();
+            }
+        };
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -195,19 +211,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        int index = 0;
-                        for (Circle circle1: circleArrayList){
-                            if (circle1.equals(circle)){
-                                index = (int)circle1.getTag();
-                                Toast.makeText(getActivity(),"AAAAAAAAAAAAAAAAAAAAAAAAAA",Toast.LENGTH_LONG).show();
-                            }
+                        if (i!=0){
+                            circle.setRadius(i*50);
+                        }else {
+                            circle.setRadius(50);
                         }
-                        if (i==0)
-                            ++i;
-                        circle.setRadius(i*50);
-                        arrayListGroups = Db.newInstance().saveCircleChanges(circle, index);
-                        initMapWithGeofencings();
-                        initMapWithMarkersAndCircles();
                     }
 
                     @Override
@@ -226,6 +234,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         }else {
                             circle.setRadius(50);
                         }
+                        saveButton.setVisibility(View.VISIBLE);
                     }
                 });
                 seekBar.setProgress((int)circle.getRadius()/50);
@@ -259,8 +268,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 Circle circle1 = (Circle) marker.getTag();
                 circle1.setCenter(marker.getPosition());
                 arrayListGroups = Db.newInstance().saveCircleChanges(circle1, (int)circle1.getTag());
-                initMapWithGeofencings();
-                initMapWithMarkersAndCircles();
+                saveButton.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -309,18 +317,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 ///////////////////////////////////////////////////////////////////-----Geofencing
 
 
-//////////////////////////////////////////////////////////////////My Location Clicked-----
-    @Override
-    public boolean onMyLocationButtonClick() {
-        return false;
-    }
-
-    @Override
-    public void onMyLocationClick(@NonNull Location location) {
-    }
-///////////////////////////////////////////////////////////////////-----My Location Clicked
-
-
     public void sendNotification(String whatGeofences){
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(getContext(),"chanel_id")
@@ -334,4 +330,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
     }
+
+///////////////////////////////////////////////////////////////
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+    }
+/////////////////////////////////////////////////////////////////
 }

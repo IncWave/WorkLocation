@@ -19,6 +19,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.Fragments.Additional.ExpandableListAdapter;
 import com.mikhailzaitsev.worklocation.R;
@@ -32,6 +35,7 @@ public class GroupsFragment extends Fragment {
     private ImageButton addButton;
     private ImageButton editButton;
     private static boolean[] firstPressed = new boolean[]{true,true,true};
+    private FusedLocationProviderClient fusedLocationProvider;
 
     public GroupsFragment() {
     }
@@ -43,6 +47,8 @@ public class GroupsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fusedLocationProvider = LocationServices.getFusedLocationProviderClient(getContext());
+
     }
 
     @Override
@@ -217,18 +223,31 @@ public class GroupsFragment extends Fragment {
         if (Db.newInstance().getGroupArray().size()>=100){
             Toast.makeText(getContext(),"There's a limit to 100 groups",Toast.LENGTH_LONG).show();
         }else {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-            View dialogView = getLayoutInflater().inflate(R.layout.add_group_dialog,null);
-            final EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
-            Button okButton = dialogView.findViewById(R.id.add_group_dialog_ok);
-            okButton.setOnClickListener(new View.OnClickListener() {
+            fusedLocationProvider.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
-                public void onClick(View view) {
-                    Db.newInstance().createGroup(editText.getText().toString(),50);
+                public void onSuccess(Location location) {
+                    if (location != null){
+                        Db.newInstance().setLocation(location);
+                        final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
+                        final View dialogView = getLayoutInflater().inflate(R.layout.add_group_dialog,null);
+                        final EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
+                        Button okButton = dialogView.findViewById(R.id.add_group_dialog_ok);
+                        okButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (editText.getText().length() != 0){
+                                    Db.newInstance().createGroup(editText.getText().toString(),50);
+                                    builder1.dismiss();
+                                }
+                            }
+                        });
+                        builder1.setView(dialogView);
+                        builder1.show();
+                    }else {
+                        Toast.makeText(getContext(),"Your last known location wasn't defined",Toast.LENGTH_LONG).show();
+                    }
                 }
             });
-            builder1.setView(dialogView);
-            builder1.show();
         }
     }
 }

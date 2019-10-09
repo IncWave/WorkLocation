@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -137,24 +138,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         seekBar = view.findViewById(R.id.fragment_map_change_radius);
-
-        saveButton = view.findViewById(R.id.fragment_map_save_button);
-        saveButton.setVisibility(Button.INVISIBLE);
-        saveButton.setOnClickListener(onClick());
-
         return view;
-    }
-
-    View.OnClickListener onClick(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.fragment_map_save_button :
-                    break;
-                }
-            }
-        };
     }
 
     @Override
@@ -187,7 +171,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         Circle circle;
         circleArrayList = new ArrayList<>();
         for (int i = 0; i<arrayListGroups.size(); i++ ) {
-            circle = drawCircle(arrayListGroups.get(i),i);
+            circle = drawCircle(arrayListGroups.get(i), i);
             circle.setStrokeColor(R.color.colorAccent);
             circle.setStrokeWidth(9);
             circleArrayList.add(circle);
@@ -211,24 +195,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        if (i>= 15)
-                            circle.setRadius(i);
+                        int index = 0;
+                        for (Circle circle1: circleArrayList){
+                            if (circle1.equals(circle)){
+                                index = (int)circle1.getTag();
+                                Toast.makeText(getActivity(),"AAAAAAAAAAAAAAAAAAAAAAAAAA",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        if (i==0)
+                            ++i;
+                        circle.setRadius(i*50);
+                        arrayListGroups = Db.newInstance().saveCircleChanges(circle, index);
+                        initMapWithGeofencings();
+                        initMapWithMarkersAndCircles();
                     }
 
                     @Override
                     public void onStartTrackingTouch(SeekBar seekBar) {
-                        if (seekBar.getProgress()>= 15)
-                            circle.setRadius(seekBar.getProgress());
+                        if (seekBar.getProgress()!=0){
+                            circle.setRadius(seekBar.getProgress()*50);
+                        }else {
+                            circle.setRadius(50);
+                        }
                     }
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        if (seekBar.getProgress()>= 15)
-                            circle.setRadius(seekBar.getProgress());
-                        saveButton.setVisibility(View.VISIBLE);
+                        if (seekBar.getProgress()!=0){
+                            circle.setRadius(seekBar.getProgress()*50);
+                        }else {
+                            circle.setRadius(50);
+                        }
                     }
                 });
-                seekBar.setProgress((int)circle.getRadius());
+                seekBar.setProgress((int)circle.getRadius()/50);
             }
         });
         return circle;
@@ -258,8 +258,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             public void onMarkerDragEnd(Marker marker) {
                 Circle circle1 = (Circle) marker.getTag();
                 circle1.setCenter(marker.getPosition());
-                saveButton.callOnClick();
+                arrayListGroups = Db.newInstance().saveCircleChanges(circle1, (int)circle1.getTag());
                 initMapWithGeofencings();
+                initMapWithMarkersAndCircles();
             }
         });
     }
@@ -296,7 +297,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private Geofence drawGeofence(Group group){
-        Log.d("TAG", "draw new geofence");
         return new Geofence.Builder()
                 .setRequestId(String.valueOf(group.getGroupId()))
                 .setCircularRegion(group.getLatitude(),group.getLongitude(),group.getRadius())

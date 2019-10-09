@@ -2,6 +2,7 @@ package com.mikhailzaitsev.worklocation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -10,6 +11,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -28,6 +32,7 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.Fragments.MapFragment;
 import com.mikhailzaitsev.worklocation.Fragments.GroupsFragment;
 import com.mikhailzaitsev.worklocation.Fragments.StatisticFragment;
@@ -54,11 +59,12 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //////////////////////////////////////////////Init and choose authentication providers
+        /////////////////////////////////////////////providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(), //Email Builder
+        /////////////////////////////////////////////        new AuthUI.IdpConfig.GoogleBuilder().build()); //Google Builder
+        /////////////////////////////////////////////showSignInActivity();
+        DELETE_THIS();
 
-        //Init and choose authentication providers
-        providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(), //Email Builder
-                new AuthUI.IdpConfig.GoogleBuilder().build()); //Google Builder
-        showSignInActivity();
 
         //geofencingClient
         GeofencingClient geofencingClient = LocationServices.getGeofencingClient(this);
@@ -73,7 +79,6 @@ public class MainActivity extends FragmentActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -105,7 +110,8 @@ public class MainActivity extends FragmentActivity {
                 .setLogo(R.drawable.logolian)
                 .build(), REQUEST_CODE);
     }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -156,6 +162,36 @@ public class MainActivity extends FragmentActivity {
                 Toast.makeText(this, "" + response.getError().getMessage(),Toast.LENGTH_LONG).show();
             }
         }
+    }
+*/
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @SuppressLint("MissingPermission")
+    public void DELETE_THIS(){
+        // Successfully signed in, so Get User
+        setCurrentUserId("asdasdsd");
+        setCurrentUserName("Mikhail Zaitsev");
+        setCurrentUserUri(Uri.parse("dfdf"));
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4111, 1, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Db.newInstance().setLocation(location);
+                Toast.makeText(getApplicationContext(),"Location Changed",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+            }
+        });
     }
 
 

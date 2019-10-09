@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.Fragments.Additional.ExpandableListAdapter;
@@ -31,7 +32,6 @@ public class GroupsFragment extends Fragment {
     private ImageButton addButton;
     private ImageButton editButton;
     private static boolean[] firstPressed = new boolean[]{true,true,true};
-    private Location currentLocation;
 
     public GroupsFragment() {
     }
@@ -214,26 +214,21 @@ public class GroupsFragment extends Fragment {
     }
 
     private void createAddGroupDialog(){
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-        View dialogView = getLayoutInflater().inflate(R.layout.add_group_dialog,null);
-        final EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
-        Button okButton = dialogView.findViewById(R.id.add_group_dialog_ok);
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Db.newInstance().createGroup(currentLocation,editText.getText().toString(),50);
-
-            }
-        });
-        builder1.setView(dialogView);
-        builder1.show();
-    }
-
-    public Location getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public void setCurrentLocation(Location currentLocation) {
-        this.currentLocation = currentLocation;
+        if (Db.newInstance().getGroupArray().size()>=100){
+            Toast.makeText(getContext(),"There's a limit to 100 groups",Toast.LENGTH_LONG).show();
+        }else {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+            View dialogView = getLayoutInflater().inflate(R.layout.add_group_dialog,null);
+            final EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
+            Button okButton = dialogView.findViewById(R.id.add_group_dialog_ok);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Db.newInstance().createGroup(editText.getText().toString(),50);
+                }
+            });
+            builder1.setView(dialogView);
+            builder1.show();
+        }
     }
 }

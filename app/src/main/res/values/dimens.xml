@@ -13,4 +13,6 @@
     <dimen name="margin18dp">18dp</dimen>
 
     <dimen name="stroke_width">4dp</dimen>
+
+    <integer name="max_length">20</integer>
 </resources>

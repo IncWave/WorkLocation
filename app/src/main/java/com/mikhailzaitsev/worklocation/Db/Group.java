@@ -57,7 +57,7 @@ public class Group implements Parcelable{
     void setRadius(int radius) {
         this.radius = radius;
     }
-    void setGroupId(long groupId) {
+    private void setGroupId(long groupId) {
         this.groupId = groupId;
     }
     void setLatitude(double latitude) {
@@ -69,7 +69,7 @@ public class Group implements Parcelable{
     void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-    void setMembers(ArrayList<Member> members) {
+    private void setMembers(ArrayList<Member> members) {
         this.members = members;
     }
 
@@ -134,7 +134,7 @@ public class Group implements Parcelable{
         }
 
         private void setMemberIdFirebase(String memberIdFirebase) { this.memberIdFirebase = memberIdFirebase; }
-        private void setOnline(boolean memberIsOnline) {
+        public void setOnline(boolean memberIsOnline) {
             this.memberIsOnline = memberIsOnline;
         }
         private void setMemberName(String memberName) {

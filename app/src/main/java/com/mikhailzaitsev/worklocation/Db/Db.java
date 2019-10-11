@@ -14,12 +14,19 @@ public class Db {
     private static ArrayList<Group> groupArrayList;
     private static Db db;
     private Location location;
+    private boolean dataHasBeenChanged = false;
+    private boolean onlineHasBeenChanged = false;
+
+
+    ///////////////////////////////////получить индификатор моего аккаунта
+    private String currentUserFirebaseId = "88888888";
+    ////////////////////////////////////
 
     private Db() {
         if (groupArrayList == null){
             groupArrayList = new ArrayList<>();
+            createGroupTest();
         }
-        createGroupTest();
     }
 
     public ArrayList<Group> getGroupArray(){
@@ -29,8 +36,8 @@ public class Db {
     public static Db newInstance() {
         if (db == null){
             db = new Db();
-            return db;
-        }else { return db; }
+        }
+        return db;
     }
 
     public ArrayList<Group> saveCirclesChanges(ArrayList<Circle> circleArrayList){
@@ -41,15 +48,16 @@ public class Db {
             groupArrayList.get(i).setLatitude(circle.getCenter().latitude);
             groupArrayList.get(i).setRadius((int)circle.getRadius());
         }
+        dataHasBeenChanged = true;
         return groupArrayList;
     }
 
-    public ArrayList<Group> saveCircleChanges(Circle circle, int i){
+    /*public ArrayList<Group> saveCircleChanges(Circle circle, int i){
         groupArrayList.get(i).setLongitude(circle.getCenter().longitude);
         groupArrayList.get(i).setLatitude(circle.getCenter().latitude);
         groupArrayList.get(i).setRadius((int)circle.getRadius());
         return groupArrayList;
-    }
+    }*/
 
 
 
@@ -65,7 +73,8 @@ public class Db {
     }
 
     public void deleteMember(int group, int member){
-                groupArrayList.get(group).getMembers().remove(member);
+        groupArrayList.get(group).getMembers().remove(member);
+        dataHasBeenChanged = true;
     }
 
     public void deleteGroupById(String group){
@@ -76,6 +85,7 @@ public class Db {
                 break;
             }
         }
+        dataHasBeenChanged = true;
     }
 
     public void changeGroupById(String groupId, String name){
@@ -86,6 +96,23 @@ public class Db {
                 break;
             }
         }
+        dataHasBeenChanged = true;
+    }
+
+    public void changeMyOnlineByUserId(ArrayList<String> arrayIdList, Boolean inOrNot){
+        x:for (int j = 0; j < arrayIdList.size(); j++) {
+            for (int i = 0; i < groupArrayList.size(); i++) {
+                if (Long.parseLong(arrayIdList.get(j)) == (groupArrayList.get(i).getGroupId())) {
+                    for (int k = 0; k < groupArrayList.get(i).getMembers().size(); k++){
+                        if (currentUserFirebaseId.equals(groupArrayList.get(i).getMembers().get(k).getMemberIdFirebase())){
+                            groupArrayList.get(i).getMembers().get(k).setOnline(inOrNot);
+                            continue x;
+                        }
+                    }
+                }
+            }
+        }
+        onlineHasBeenChanged = true;
     }
 
     public void createGroup(String groupName, int radius){
@@ -96,6 +123,7 @@ public class Db {
                 ,location.getLatitude()
                 ,location.getLongitude()
                 ,radius));
+        dataHasBeenChanged = true;
         /////////////////////////////////////////////////////////////////////////send to the server
     }
 
@@ -106,6 +134,7 @@ public class Db {
                 ,MainActivity.getCurrentUserUri(),
                 true
                 ,MainActivity.getCurrentUserId()));
+        dataHasBeenChanged = true;
         return array;
     }
 
@@ -113,114 +142,17 @@ public class Db {
         return null;////////////////////////////////////////////////////////////////////////
     }
 
-    public ArrayList<Group> addGroups(){
-        return null;////////////////////////////////////////////////////////////////////////
-    }
-
     private void createGroupTest(){
         groupArrayList.add(new Group(0,"zero", createMemberTest(),53.894810,27.509498,50));
         groupArrayList.add(new Group(100,"first", createMemberTest1(),53.894841,27.509496,100));
         groupArrayList.add(new Group(200,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(300,"third", createMemberTest1(),53.899595,27.515158,200));
-
-        groupArrayList.add(new Group(0,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(1200,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(2030,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(3400,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(505,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(1600,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(2700,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(3800,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(70,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(16060,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(25500,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(34040,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(450,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(13700,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(2080,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(3700,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(660,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(1600,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(2600,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(3600,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(50,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(15400,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(2300,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(30340,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(340,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(13400,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(25400,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(35400,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(540,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(10540,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(26500,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(36500,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(670,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(17800,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(20870,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(38700,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(870,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(16700,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(286700,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(38600,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(450,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(13400,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(234500,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(353400,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(53420,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(15400,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(23400,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(305430,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(54350,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(1345600,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(24645600,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(3453500,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(54305,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(153500,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(203530,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(353500,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(3450,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(13500,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(23600,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(30750,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(8650,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(188500,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(6667,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(877300,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(6770,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(17800,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(20780,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(36700,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(653340,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(12300,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(2040,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(3600,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(4350,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(1600,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(2054350,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(376500,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(6750,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(17500,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(20760,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(37600,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(8760,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(156700,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(64200,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(34500,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(46460,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(164500,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(20460,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(3020,"third", createMemberTest1(),53.899595,27.515158,200));
-        groupArrayList.add(new Group(2340,"zero", createMemberTest(),53.894810,27.509498,50));
-        groupArrayList.add(new Group(144300,"first", createMemberTest1(),53.894841,27.509496,100));
-        groupArrayList.add(new Group(255500,"second", createMemberTest(),53.897546,27.520649,150));
-        groupArrayList.add(new Group(306660,"third", createMemberTest1(),53.899595,27.515158,200));
+        groupArrayList.add(new Group(300,"third", createMemberTest1(),53.899595,27.515158,100));
 
     }
 
     private ArrayList<Group.Member> createMemberTest(){
         ArrayList<Group.Member> array = new ArrayList<>();
-        array.add(new Group.Member(0,"mirt", Uri.parse("an"),true,"rrrr"));
+        array.add(new Group.Member(0,"MMMMMMMMMMMMMMMMMMM", Uri.parse("an"),false,"88888888"));
         array.add(new Group.Member(123,"Tfg Lkcv", Uri.parse("antt"),true,"wwwww"));
         array.add(new Group.Member(235,"Oppp Sdfc", Uri.parse("an"),false,"qqqqq"));
         array.add(new Group.Member(3678,"Qwe trthh", Uri.parse("anq"),false,"aaaaa"));
@@ -243,6 +175,7 @@ public class Db {
         array.add(new Group.Member(858,"wwww", Uri.parse("an"),true,"as"));
         array.add(new Group.Member(85,"pppp", Uri.parse("anp"),true,"sdsad"));
         array.add(new Group.Member(933,"eree Lkcv", Uri.parse("antt"),true,"re"));
+        array.add(new Group.Member(107,"MMMMMMMMMMMMMMMMMMM", Uri.parse("a4n"),false,"88888888"));
         array.add(new Group.Member(107,"tttt Sdfc", Uri.parse("an"),false,"rte"));
         array.add(new Group.Member(111,"yyyyy trthh", Uri.parse("anq"),false,"et"));
         array.add(new Group.Member(121,"uuuuuu tty", Uri.parse("anw"),true,"sersdf"));
@@ -268,7 +201,6 @@ public class Db {
         array.add(new Group.Member(857,"www2w", Uri.parse("a4n"),true,"q"));
         array.add(new Group.Member(885,"pp3pp", Uri.parse("an34p"),true,"w"));
         array.add(new Group.Member(933,"ere7e Lkcv", Uri.parse("an2tt"),true,"e"));
-        array.add(new Group.Member(107,"ttt4t Sdfc", Uri.parse("a4n"),false,"r"));
         array.add(new Group.Member(111,"yyyy9y trthh", Uri.parse("an3q"),false,"t"));
         array.add(new Group.Member(121,"uuuuu3u tty", Uri.parse("an2w"),true,"y"));
         array.add(new Group.Member(1023,"ddd9d Tsd", Uri.parse("anrt3rr"),false,"u"));
@@ -295,5 +227,19 @@ public class Db {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+    public boolean isDataHasBeenChanged() {
+        return dataHasBeenChanged;
+    }
+    public void setDataHasBeenChanged(boolean dataHasBeenChanged) {
+        this.dataHasBeenChanged = dataHasBeenChanged;
+    }
+
+    public boolean isOnlineHasBeenChanged() {
+        return onlineHasBeenChanged;
+    }
+
+    public void setOnlineHasBeenChanged(boolean onlineHasBeenChanged) {
+        this.onlineHasBeenChanged = onlineHasBeenChanged;
     }
 }

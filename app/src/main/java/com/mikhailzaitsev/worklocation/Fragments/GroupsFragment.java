@@ -26,16 +26,18 @@ import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.Fragments.Additional.ExpandableListAdapter;
 import com.mikhailzaitsev.worklocation.R;
 
+import java.util.Objects;
+
 
 public class GroupsFragment extends Fragment {
 
-    private ExpandableListView listView;
     private ExpandableListAdapter listAdapter;
     private ImageButton deleteButton;
     private ImageButton addButton;
     private ImageButton editButton;
     private static boolean[] firstPressed = new boolean[]{true,true,true};
     private FusedLocationProviderClient fusedLocationProvider;
+
 
     public GroupsFragment() {
     }
@@ -47,7 +49,7 @@ public class GroupsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fusedLocationProvider = LocationServices.getFusedLocationProviderClient(getContext());
+        fusedLocationProvider = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
 
     }
 
@@ -60,7 +62,7 @@ public class GroupsFragment extends Fragment {
         addButton = view.findViewById(R.id.fragment_group_add_button);
         editButton = view.findViewById(R.id.fragment_group_edit_button);
 
-        listView = view.findViewById(R.id.fragment_group_expendable_listview);
+        ExpandableListView listView = view.findViewById(R.id.fragment_group_expendable_listview);
         listAdapter = new ExpandableListAdapter(getContext(), Db.newInstance().getGroupArray());
         listView.setAdapter(listAdapter);
 
@@ -186,7 +188,6 @@ public class GroupsFragment extends Fragment {
                             firstPressed[2] = !firstPressed[2];
                             deleteButton.setEnabled(true);
                             addButton.setEnabled(true);
-                            MapFragment.newInstance().initMapWithMarkersAndCircles();
                         }
                         break;
                 }
@@ -223,7 +224,7 @@ public class GroupsFragment extends Fragment {
         if (Db.newInstance().getGroupArray().size()>=100){
             Toast.makeText(getContext(),"There's a limit to 100 groups",Toast.LENGTH_LONG).show();
         }else {
-            fusedLocationProvider.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+            fusedLocationProvider.getLastLocation().addOnSuccessListener(Objects.requireNonNull(getActivity()), new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null){
@@ -249,5 +250,9 @@ public class GroupsFragment extends Fragment {
                 }
             });
         }
+    }
+
+    public void dataHasBeenChanged(){
+        listAdapter.notifyDataSetChanged();
     }
 }

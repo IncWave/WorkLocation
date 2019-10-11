@@ -17,13 +17,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -54,9 +52,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
    private GoogleMap googleMap;
    private SeekBar seekBar;
-   private Marker marker;
-   private Button saveButton;
-   private Button addButton;
+    private Button saveButton;
    private ArrayList <Circle> circleArrayList;
    private ArrayList<Group> arrayListGroups;
 
@@ -64,14 +60,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
    private ArrayList <Geofence> geofenceArrayList;
    private PendingIntent pendingIntent;
 
-   private static MapFragment mapfragment;
 ////////////////////////////////////////////////////////////////////////permission----
     private void getLocationPermission(){
-        if (ContextCompat.checkSelfPermission(getContext(),
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             setMyLocEnabled();
         }else {
-            ActivityCompat.requestPermissions(getActivity(),
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
@@ -114,12 +109,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 ////////////////////////////////////////////////////////////////////////----permission
 
+    public void dataHasBeenChanged(){
+        initMapWithGeofencings();
+        initMapWithMarkersAndCircles();
+    }
+
 
     public static MapFragment newInstance() {
-        if (mapfragment == null){
-            mapfragment = new MapFragment();
-        }
-        return mapfragment;
+        return new MapFragment();
     } //New Instance
 
     public MapFragment() {
@@ -149,9 +146,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 saveButton.setVisibility(View.INVISIBLE);
-                Db.newInstance().saveCirclesChanges(circleArrayList);
-                initMapWithGeofencings();
-                initMapWithMarkersAndCircles();
+                arrayListGroups = Db.newInstance().saveCirclesChanges(circleArrayList);
+                dataHasBeenChanged();
             }
         };
     }
@@ -173,13 +169,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         getLocationPermission();
-        MapsInitializer.initialize(getContext());
+        MapsInitializer.initialize(Objects.requireNonNull(getContext()));
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        initMapWithGeofencings();
-        initMapWithMarkersAndCircles();
+        dataHasBeenChanged();
     }
 
-    public void initMapWithMarkersAndCircles(){
+    private void initMapWithMarkersAndCircles(){
         if (googleMap != null){
             googleMap.clear();
         }
@@ -244,7 +239,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void drawMarker(final Circle circle, final Group group){
-        marker = googleMap
+        Marker marker = googleMap
                 .addMarker(new MarkerOptions()
                         .position(circle.getCenter())
                         .draggable(true)
@@ -260,14 +255,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onMarkerDrag(Marker marker) {
                 Circle circle1 = (Circle) marker.getTag();
-                circle1.setCenter(marker.getPosition());
+                Objects.requireNonNull(circle1).setCenter(marker.getPosition());
             }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
                 Circle circle1 = (Circle) marker.getTag();
-                circle1.setCenter(marker.getPosition());
-                arrayListGroups = Db.newInstance().saveCircleChanges(circle1, (int)circle1.getTag());
+                Objects.requireNonNull(circle1).setCenter(marker.getPosition());
                 saveButton.setVisibility(View.VISIBLE);
             }
         });
@@ -283,7 +277,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         for (int i = 0; i < arrayListGroups.size();i++) {
             geofenceArrayList.add(drawGeofence(arrayListGroups.get(i)));
         }
-
         geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent());
     }
 
@@ -316,20 +309,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
 ///////////////////////////////////////////////////////////////////-----Geofencing
 
-
-    public void sendNotification(String whatGeofences){
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(getContext(),"chanel_id")
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
-                        .setContentTitle("Title")
-                        .setContentText(whatGeofences);
-
-        Notification notification = builder.build();
-
-        NotificationManager notificationManager =
-                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification);
-    }
 
 ///////////////////////////////////////////////////////////////
     @Override

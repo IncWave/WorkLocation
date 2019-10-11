@@ -7,13 +7,16 @@ import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
-import com.mikhailzaitsev.worklocation.Fragments.MapFragment;
+import com.mikhailzaitsev.worklocation.Db.Db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        ArrayList<String> idOfTriggered = new ArrayList<>();
+        Boolean inOrNot;
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()){
             Log.d("TAG", "GeofenceBroadcastReceiver has an error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -21,23 +24,15 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
         }
 
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
-        String whatGeofences = "";
         List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-        switch (geofenceTransition){
-            case Geofence.GEOFENCE_TRANSITION_DWELL:
-                whatGeofences = "Dwell :";
-                for( Geofence geofence: triggeringGeofences){
-                    whatGeofences+= "  "+ geofence.getRequestId();
-                }
-                MapFragment.newInstance().sendNotification(whatGeofences);
-                break;
-            case Geofence.GEOFENCE_TRANSITION_EXIT:
-                whatGeofences = "Exit :";
-                for( Geofence geofence: triggeringGeofences){
-                    whatGeofences+= "  "+ geofence.getRequestId();
-                }
-                MapFragment.newInstance().sendNotification(whatGeofences);
-                break;
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL){
+            inOrNot = true;
+        }else {
+            inOrNot = false;
         }
+        for (int i = 0; i <triggeringGeofences.size(); i++){
+            idOfTriggered.add(triggeringGeofences.get(i).getRequestId());
+        }
+        Db.newInstance().changeMyOnlineByUserId(idOfTriggered,inOrNot);
     }
 }

@@ -4,6 +4,8 @@ import android.location.Location;
 import android.net.Uri;
 
 import com.google.android.gms.maps.model.Circle;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mikhailzaitsev.worklocation.MainActivity;
 
 import java.util.ArrayList;
@@ -17,13 +19,18 @@ public class Db {
     private boolean dataHasBeenChanged = false;
     private boolean onlineHasBeenChanged = false;
 
+    private DatabaseReference dataR;
 
     ///////////////////////////////////получить индификатор моего аккаунта
-    private String currentUserFirebaseId = "88888888";
+    private String currentUserFirebaseId = "RdKxPTuHXRdNENmEd6vrg15dzTs1";
     ////////////////////////////////////
 
     private Db() {
         if (groupArrayList == null){
+
+            //Connect to FirebaseDb
+            dataR = FirebaseDatabase.getInstance().getReference();
+
             groupArrayList = new ArrayList<>();
             createGroupTest();
         }
@@ -31,6 +38,14 @@ public class Db {
 
     public ArrayList<Group> getGroupArray(){
         return groupArrayList;
+    }
+
+    public ArrayList<String> getGroupNamesArray(){
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 0 ; i < groupArrayList.size(); i++){
+            arrayList.add(i,groupArrayList.get(i).getGroupName());
+        }
+        return arrayList;
     }
 
     public static Db newInstance() {
@@ -129,7 +144,7 @@ public class Db {
 
     private ArrayList<Group.Member> createMember(){
         ArrayList<Group.Member> array = new ArrayList<>();
-        array.add(new Group.Member(Calendar.getInstance().getTimeInMillis()/41
+        array.add(new Group.Member(Calendar.getInstance().getTimeInMillis()
                 ,MainActivity.getCurrentUserName()
                 ,MainActivity.getCurrentUserUri(),
                 true
@@ -147,12 +162,11 @@ public class Db {
         groupArrayList.add(new Group(100,"first", createMemberTest1(),53.894841,27.509496,100));
         groupArrayList.add(new Group(200,"second", createMemberTest(),53.897546,27.520649,150));
         groupArrayList.add(new Group(300,"third", createMemberTest1(),53.899595,27.515158,100));
-
     }
 
     private ArrayList<Group.Member> createMemberTest(){
         ArrayList<Group.Member> array = new ArrayList<>();
-        array.add(new Group.Member(0,"MMMMMMMMMMMMMMMMMMM", Uri.parse("an"),false,"88888888"));
+        array.add(new Group.Member(0,"Mikhail Zaitsev", Uri.parse("an"),false,"RdKxPTuHXRdNENmEd6vrg15dzTs1"));
         array.add(new Group.Member(123,"Tfg Lkcv", Uri.parse("antt"),true,"wwwww"));
         array.add(new Group.Member(235,"Oppp Sdfc", Uri.parse("an"),false,"qqqqq"));
         array.add(new Group.Member(3678,"Qwe trthh", Uri.parse("anq"),false,"aaaaa"));
@@ -172,27 +186,27 @@ public class Db {
     }
     private ArrayList<Group.Member> createMemberTest1(){
         ArrayList<Group.Member> array = new ArrayList<>();
-        array.add(new Group.Member(858,"wwww", Uri.parse("an"),true,"as"));
-        array.add(new Group.Member(85,"pppp", Uri.parse("anp"),true,"sdsad"));
-        array.add(new Group.Member(933,"eree Lkcv", Uri.parse("antt"),true,"re"));
-        array.add(new Group.Member(107,"MMMMMMMMMMMMMMMMMMM", Uri.parse("a4n"),false,"88888888"));
-        array.add(new Group.Member(107,"tttt Sdfc", Uri.parse("an"),false,"rte"));
-        array.add(new Group.Member(111,"yyyyy trthh", Uri.parse("anq"),false,"et"));
-        array.add(new Group.Member(121,"uuuuuu tty", Uri.parse("anw"),true,"sersdf"));
-        array.add(new Group.Member(1023,"dddd Tsd", Uri.parse("anrtrr"),false,"cv"));
-        array.add(new Group.Member(141,"xxx Ipopdfc", Uri.parse("anyy"),false,"hj"));
-        array.add(new Group.Member(151,"zzzz Trer", Uri.parse("aneere"),true,"z"));
-        array.add(new Group.Member(3432,"21", Uri.parse("an"),true,"x"));
+        array.add(new Group.Member(858,"wwww", Uri.parse("an"),true,"sd"));
+        array.add(new Group.Member(85,"pppp", Uri.parse("anp"),true,"dfd"));
+        array.add(new Group.Member(933,"eree Lkcv", Uri.parse("antt"),true,"dsfd"));
+        array.add(new Group.Member(107,"Mikhail Zaitsev", Uri.parse("a4n"),false,"RdKxPTuHXRdNENmEd6vrg15dzTs1"));
+        array.add(new Group.Member(107,"tttt Sdfc", Uri.parse("an"),false,"df"));
+        array.add(new Group.Member(111,"yyyyy trthh", Uri.parse("anq"),false,"fdfdf"));
+        array.add(new Group.Member(121,"uuuuuu tty", Uri.parse("anw"),true,"dfd"));
+        array.add(new Group.Member(1023,"dddd Tsd", Uri.parse("anrtrr"),false,"trt"));
+        array.add(new Group.Member(141,"xxx Ipopdfc", Uri.parse("anyy"),false,"qwe"));
+        array.add(new Group.Member(151,"zzzz Trer", Uri.parse("aneere"),true,"rtte"));
+        array.add(new Group.Member(3432,"21", Uri.parse("an"),true,"qwe"));
         array.add(new Group.Member(1233,"23", Uri.parse("antt"),true,"c"));
-        array.add(new Group.Member(2345,"O43", Uri.parse("an"),false,"v"));
-        array.add(new Group.Member(35678,"45hh", Uri.parse("anq"),false,"b"));
-        array.add(new Group.Member(4665,"T65r tty", Uri.parse("anw"),true,"n"));
-        array.add(new Group.Member(57878,"T76", Uri.parse("anrtrr"),false,"m"));
-        array.add(new Group.Member(86,"Zer78c", Uri.parse("anyy"),false,","));
-        array.add(new Group.Member(7998,"A38Trer", Uri.parse("aneere"),true,"a"));
-        array.add(new Group.Member(72,"161", Uri.parse("an"),true,"s"));
-        array.add(new Group.Member(12543,"22622", Uri.parse("anstt"),true,"d"));
-        array.add(new Group.Member(23435,"33373c", Uri.parse("a6sn"),false,"f"));
+        array.add(new Group.Member(2345,"O43", Uri.parse("an"),false,"cvxcvc"));
+        array.add(new Group.Member(35678,"45hh", Uri.parse("anq"),false,"s2ds"));
+        array.add(new Group.Member(4665,"T65r tty", Uri.parse("anw"),true,"qwe"));
+        array.add(new Group.Member(57878,"T76", Uri.parse("anrtrr"),false,"vcxz"));
+        array.add(new Group.Member(86,"Zer78c", Uri.parse("anyy"),false,"q2"));
+        array.add(new Group.Member(7998,"A38Trer", Uri.parse("aneere"),true,"98"));
+        array.add(new Group.Member(72,"161", Uri.parse("an"),true,"qeq"));
+        array.add(new Group.Member(12543,"22622", Uri.parse("anstt"),true,"213213"));
+        array.add(new Group.Member(23435,"33373c", Uri.parse("a6sn"),false,"234333"));
         array.add(new Group.Member(36478,"44444", Uri.parse("a5dnq"),false,"g"));
         array.add(new Group.Member(46555,"55555", Uri.parse("an4fw"),true,"h"));
         array.add(new Group.Member(56768,"67666", Uri.parse("and3rtrr"),false,"j"));
@@ -234,11 +248,9 @@ public class Db {
     public void setDataHasBeenChanged(boolean dataHasBeenChanged) {
         this.dataHasBeenChanged = dataHasBeenChanged;
     }
-
     public boolean isOnlineHasBeenChanged() {
         return onlineHasBeenChanged;
     }
-
     public void setOnlineHasBeenChanged(boolean onlineHasBeenChanged) {
         this.onlineHasBeenChanged = onlineHasBeenChanged;
     }

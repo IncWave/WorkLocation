@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "200911592642-pc8vn8srnp7itgip3st91rr48dgep43e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mikhailzaitsev.worklocation",
+            "certificate_hash": "49431dd37d17517ee65a71ce33f926b40d3ba844"
+          }
+        },
+        {
           "client_id": "200911592642-i3egepbppept30tfr4kjebn9as8srq91.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -30,6 +38,12 @@
       "api_key": [
         {
           "current_key": "AIzaSyC2XB47jEJYCQN6c1b9VGUazAcFx06G4NM"
+        },
+        {
+          "current_key": "AIzaSyCJGfSdIfmnDW5HRgL3L3sNPyA4q7nhcA0"
+        },
+        {
+          "current_key": "AIzaSyA7oB4vv5h_1GFwlM2TkhSgagESryfygbY"
         }
       ],
       "services": {

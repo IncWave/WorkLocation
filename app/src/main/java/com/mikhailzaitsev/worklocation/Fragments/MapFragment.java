@@ -302,7 +302,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .setRequestId(String.valueOf(group.getGroupId()))
                 .setCircularRegion(group.getLatitude(),group.getLongitude(),group.getRadius())
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setLoiteringDelay(100)
+                .setLoiteringDelay(1000)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
     }

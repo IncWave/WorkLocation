@@ -25,4 +25,8 @@
     <string name="your_group_name">Your Group name</string>
     <string name="add">add</string>
     <string name="ok1">ok</string>
+    <string name="exit">Exit</string>
+    <string name="copy">copy</string>
+    <string name="paste_here_group_id">Paste here group id</string>
+    <string name="paste_here_member_id">Paste here member id</string>
 </resources>

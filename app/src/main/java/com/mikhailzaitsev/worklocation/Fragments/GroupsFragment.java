@@ -2,6 +2,9 @@ package com.mikhailzaitsev.worklocation.Fragments;
 
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
@@ -12,10 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,20 +42,24 @@ public class GroupsFragment extends Fragment {
     private ImageButton editButton;
     private static boolean[] firstPressed = new boolean[]{true,true,true};
     private FusedLocationProviderClient fusedLocationProvider;
+    private String currentUserIdThatCouldBeShowed = "";
+
+    private static final String ARG = "param1";
 
 
     public GroupsFragment() {
     }
 
-    public static GroupsFragment newInstance() {
-        return new GroupsFragment();
+    public static GroupsFragment newInstance(String string) {
+        GroupsFragment fragment = new GroupsFragment();
+       fragment.currentUserIdThatCouldBeShowed = string;
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
-
     }
 
     @Override
@@ -197,21 +206,31 @@ public class GroupsFragment extends Fragment {
     }
 
     private void createChooseDialog(){
-        String [] choose = {"Group", "Member"};
+        String [] choose = { "Get My Id", "Create Group...", "Add Group...", "Add Member..."};
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                .setTitle("Add...").setItems(choose, new DialogInterface.OnClickListener() {
+                .setItems(choose, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i){
                             case 0:
                                 dialogInterface.dismiss();
                                 addButton.callOnClick();
-                                createAddGroupDialog();
+                                getMyIdDialog();
                                 break;
                             case 1:
                                 dialogInterface.dismiss();
-                            default:
                                 addButton.callOnClick();
+                                createNewGroupDialog();
+                                break;
+                            case 2:
+                                dialogInterface.dismiss();
+                                addButton.callOnClick();
+                                addGroupDialog();
+                                break;
+                            case 3:
+                                dialogInterface.dismiss();
+                                addButton.callOnClick();
+                                addMemberDialog();
                                 break;
                         }
                     }
@@ -220,7 +239,27 @@ public class GroupsFragment extends Fragment {
 
     }
 
-    private void createAddGroupDialog(){
+    private void getMyIdDialog(){
+        final AlertDialog builder = new AlertDialog.Builder(getContext()).create();
+        final View dialogView = getLayoutInflater().inflate(R.layout.get_my_id_dialog,null);
+        final EditText editText = dialogView.findViewById(R.id.get_my_id_dialog_edit_text);
+        editText.setText(currentUserIdThatCouldBeShowed);
+        Button okButton = dialogView.findViewById(R.id.get_my_id_dialog_button);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) Objects.requireNonNull(getContext()).getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("", editText.getText().toString());
+                clipboard.setPrimaryClip(clip);
+                builder.dismiss();
+                Toast.makeText(getContext(),"Your id was copied",Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setView(dialogView);
+        builder.show();
+    }
+
+    private void createNewGroupDialog(){
         if (Db.newInstance().getGroupArray().size()>=100){
             Toast.makeText(getContext(),"There's a limit to 100 groups",Toast.LENGTH_LONG).show();
         }else {
@@ -230,9 +269,9 @@ public class GroupsFragment extends Fragment {
                     if (location != null){
                         Db.newInstance().setLocation(location);
                         final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
-                        final View dialogView = getLayoutInflater().inflate(R.layout.add_group_dialog,null);
-                        final EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
-                        Button okButton = dialogView.findViewById(R.id.add_group_dialog_ok);
+                        final View dialogView = getLayoutInflater().inflate(R.layout.create_group_dialog,null);
+                        final EditText editText = dialogView.findViewById(R.id.create_group_dialog_set_name);
+                        Button okButton = dialogView.findViewById(R.id.create_group_dialog_ok);
                         okButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -250,6 +289,53 @@ public class GroupsFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void addGroupDialog(){
+        final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
+        final View dialogView = getLayoutInflater().inflate(R.layout.add_group_dialog,null);
+        final EditText editText = dialogView.findViewById(R.id.add_group_dialog_set_name);
+        Button okButton = dialogView.findViewById(R.id.add_group_dialog_ok);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /////////////////////////////////////////////////////////////
+            }
+        });
+        builder1.setView(dialogView);
+        builder1.show();
+    }
+
+    private void addMemberDialog(){
+        final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
+        final View dialogView = getLayoutInflater().inflate(R.layout.add_member,null);
+        final Spinner spinner = dialogView.findViewById(R.id.add_member_select_group_view);
+        final EditText editText = dialogView.findViewById(R.id.add_member_id);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, Db.newInstance().getGroupNamesArray());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Button okButton = dialogView.findViewById(R.id.add_member_ok);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /////////////////////////////////////////////////////////////
+            }
+        });
+        builder1.setView(dialogView);
+        builder1.show();
     }
 
     public void dataHasBeenChanged(){

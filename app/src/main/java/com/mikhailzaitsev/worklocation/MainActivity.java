@@ -98,7 +98,8 @@ public class MainActivity extends FragmentActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
-        groupsFragment = GroupsFragment.newInstance();
+
+        groupsFragment = GroupsFragment.newInstance(calculateCurrentUserIdThatCouldBeShowed());
         mapFragment = MapFragment.newInstance();
         setRepeatingAsyncTask();
     }
@@ -123,7 +124,7 @@ public class MainActivity extends FragmentActivity {
                 });
             }
         };
-        timer.schedule(timeTask, 0,1000);
+        timer.schedule(timeTask, 0,30000);
     }
 
     private void showSignInActivity() {
@@ -193,11 +194,11 @@ public class MainActivity extends FragmentActivity {
     @SuppressLint("MissingPermission")
     public void DELETE_THIS(){
         // Successfully signed in, so Get User
-        setCurrentUserId("88888888");
+        setCurrentUserId("RdKxPTuHXRdNENmEd6vrg15dzTs1");
         setCurrentUserName("Mikhail Zaitsev");
         setCurrentUserUri(Uri.parse("dfdf"));
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Objects.requireNonNull(locationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 4111, 1, new LocationListener() {
+        Objects.requireNonNull(locationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 Db.newInstance().setLocation(location);
@@ -317,6 +318,30 @@ public class MainActivity extends FragmentActivity {
         NotificationManager notificationManager =
                 (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         Objects.requireNonNull(notificationManager).notify(1, notification);
+    }
+
+    private String calculateCurrentUserIdThatCouldBeShowed(){
+        String[] alphab = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
+                "r", "s", "t", "u", "v", "w", "x", "y", "z", "A","B","C","D","E","F","G","H","I","J","K","L",
+                "M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+        String[] codes = {" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 ", " 10 ", " 11 ", " 12 "
+                , " 13 ", " 14 ", " 15 ", " 16 ", " 17 ", " 18 ", " 19 ", " 20 ", " 21 ", " 22 ", " 23 ", " 24 "
+                , " 25 ", " 26 "," 27 "," 28 "," 29 "," 30 "," 31 "," 32 "," 33 "," 34 "," 35 "," 36 "
+                ," 37 "," 38 "," 39 "," 40 "," 41 "," 42 "," 43 "," 44 "," 45 "," 46 "," 47 "," 48 "," 49 "," 50 "
+                ," 51 "," 52 "};
+        String result = currentUserId.substring(0,5);
+        String strnum = " " + currentUserId.substring(5) + " ";
+        for (int i = 0; i < alphab.length; i++) {
+            strnum = strnum.replaceAll(alphab[i], codes[i]);
+        }
+        String[] words = strnum.split(" ");
+        int num = 0;
+        for (int i = 0; i <words.length; i++){
+            if (words[i].length() != 0) {
+                num += (Integer.parseInt(words[i]))*i;
+            }
+        }
+        return result + num + words.length + currentUserName.length();
     }
 }
 

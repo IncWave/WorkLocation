@@ -12,13 +12,12 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -53,6 +52,13 @@ public class MainActivity extends FragmentActivity {
     private static String currentUserName;
     private static Uri currentUserUri;
     private static Location currentUserLocation;
+
+    //AsyncTask
+    Timer timer;
+    Timer timerInternet;
+    boolean flag = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,30 +107,74 @@ public class MainActivity extends FragmentActivity {
 
         groupsFragment = GroupsFragment.newInstance(calculateCurrentUserIdThatCouldBeShowed());
         mapFragment = MapFragment.newInstance();
-        setRepeatingAsyncTask();
+
+        setRepeatingAsyncTask(this);
     }
 
-    private void setRepeatingAsyncTask(){
-        final Handler handler = new Handler();
-        Timer timer = new Timer();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Db.newInstance();
+        setRepeatingAsyncTask(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Db.newInstance().deleteDb();
+        System.gc();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
+        timer.purge();
+        timerInternet.cancel();
+        timerInternet.purge();
+        timer = null;
+        timerInternet = null;
+    }
+
+
+
+    private void setRepeatingAsyncTask(final MainActivity activity){
+        timer = new Timer();
+        timerInternet = new Timer();
 
         TimerTask timeTask = new TimerTask() {
             @Override
             public void run() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            CheckLocalDbChanged taskCheck = new CheckLocalDbChanged();
-                            taskCheck.doInBackground(mapFragment,groupsFragment);
-                        }catch (Exception e){
-
-                        }
-                    }
-                });
+                try {
+                    CheckLocalDbChanged taskCheck = new CheckLocalDbChanged();
+                    taskCheck.doInBackground(mapFragment,groupsFragment);
+                }catch (Exception e){
+                }
             }
         };
         timer.schedule(timeTask, 0,30000);
+
+        final CheckInternetConnectionMain checkInternetConnectionMain = new CheckInternetConnectionMain(activity);
+        TimerTask timeTaskInternet = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    if (flag){
+                        timerInternet.cancel();
+                        timerInternet.purge();
+                        timer.cancel();
+                        timer.purge();
+                        activity.startActivity(new Intent(activity, NoInternetConnectionActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    }else {
+                        checkInternetConnectionMain.doInBackground();
+                    }
+                }catch (Exception e){
+                    //
+                    //
+                }
+            }
+        };
+        timerInternet.schedule(timeTaskInternet, 0,2000);
     }
 
     private void showSignInActivity() {
@@ -343,22 +393,5 @@ public class MainActivity extends FragmentActivity {
         }
         return result + num + words.length + currentUserName.length();
     }
-}
 
-class CheckLocalDbChanged extends AsyncTask<Fragment,Void,Void> {
-    @Override
-    protected Void doInBackground(Fragment... fragments) {
-        MapFragment mapFragment = (MapFragment) fragments[0];
-        GroupsFragment groupsFragment = (GroupsFragment) fragments[1];
-        if (Db.newInstance().isDataHasBeenChanged()){
-            mapFragment.dataHasBeenChanged();
-            groupsFragment.dataHasBeenChanged();
-            Db.newInstance().setDataHasBeenChanged(false);
-        }
-        if (Db.newInstance().isOnlineHasBeenChanged()){
-            groupsFragment.dataHasBeenChanged();
-            Db.newInstance().setOnlineHasBeenChanged(false);
-        }
-        return null;
-    }
 }

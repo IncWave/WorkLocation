@@ -71,7 +71,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)){
-                new PermissionAsyncTask(getContext()).execute();
+                new PermissionAsyncTask().execute();
             }
         }
     }
@@ -86,10 +86,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     static private class PermissionAsyncTask extends AsyncTask<Void,Void,Void> {
-
-        PermissionAsyncTask(Context context){
-            WeakReference<Context> weakReferenceContext = new WeakReference<>(context);
-        }
 
         @Override
         protected void onPreExecute() {

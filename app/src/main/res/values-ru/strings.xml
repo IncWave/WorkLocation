@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">WorkLocation</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="go_to_the_list_of_rooms">Перейти во вкладку со списком групп</string>
+    <string name="go_to_the_map">Перейти на вкладку карты</string>
+    <string name="go_to_the_statistic">Перейти во вкладку статистики</string>
+    <string name="photo">Фото</string>
+    <string name="is_online">Онлайн ли?</string>
+    <string name="why">Зачем нам разрешение?</string>
+    <string name="WhyMessage">Поскольку приложение завязано на геолокации, без него приложение не будет работать корректно. И не волнуйтесь, данные о вашем местоположении нигде не будут сохраняться)</string>
+    <string name="ok">Хорошо</string>
+    <string name="save">Сохранить</string>
+    <string name="it_is_delete_button">Кнопка удаления</string>
+    <string name="it_is_add_button">Кнопка добавления</string>
+    <string name="it_is_edit_button">Кнопка редактирования</string>
+    <string name="sure_delete_m">Вы уверены ,что хотите удалить этого пользователя?</string>
+    <string name="sure_delete_g">Вы уверены что хотите удалить эту группу?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="name">Имя</string>
+    <string name="member">Пользователь</string>
+    <string name="group">Группа</string>
+    <string name="your_group_name">Имя вашей новой группы</string>
+    <string name="add">Добавить</string>
+    <string name="ok1">Готово</string>
+    <string name="exit">Выйти</string>
+    <string name="copy">Скопировать</string>
+    <string name="paste_here_group_id">Вставьте сюда id группы</string>
+    <string name="paste_here_member_id">Вставьте сюда id пользователя</string>
+    <string name="your_id_was_copied">Ваш id был сохранён в буфер обмена</string>
+    <string name="theres_a_limit_to_100_groups">Количество групп ограничено 100 группами</string>
+    <string name="your_last_known_location_wasnt_defined">Ваше последнее местоположение не было определено</string>
+    <string name="get_my_id">Мой id</string>
+    <string name="create_group">Создать группу…</string>
+    <string name="add_group">Добавить группу…</string>
+    <string name="add_member">Добавить пользователся…</string>
+</resources>

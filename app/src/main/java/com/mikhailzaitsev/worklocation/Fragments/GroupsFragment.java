@@ -28,7 +28,9 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.mikhailzaitsev.worklocation.Db.Db;
+import com.mikhailzaitsev.worklocation.Db.Group;
 import com.mikhailzaitsev.worklocation.Fragments.Additional.ExpandableListAdapter;
+import com.mikhailzaitsev.worklocation.MainActivity;
 import com.mikhailzaitsev.worklocation.R;
 
 import java.util.Objects;
@@ -165,6 +167,7 @@ public class GroupsFragment extends Fragment {
                             editButton.setEnabled(false);
                             deleteButton.setImageResource(R.drawable.delete_pink_48dp);
                             firstPressed[0] = !firstPressed[0];
+                            isMemberGroupExisting(Db.newInstance().getGroupArray().get(0));
                         }else {
                             deleteButton.setImageResource(R.drawable.delete_grey_48dp);
                             firstPressed[0] = !firstPressed[0];
@@ -205,8 +208,28 @@ public class GroupsFragment extends Fragment {
         });
     }
 
+    <T>boolean isMemberGroupExisting(T memberOrGroup){
+        boolean Q = true;
+        if (memberOrGroup.getClass() == Group.class){
+
+            Toast.makeText(getContext(),"TRRRRRUE",Toast.LENGTH_SHORT).show();
+        }else {
+
+            Toast.makeText(getContext(),"FFFFFFFFFFFFFFFFFFFFFFFFFFFFF",Toast.LENGTH_SHORT).show();
+        }
+        if (Q){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     private void createChooseDialog(){
-        String [] choose = { "Get My Id", "Create Group...", "Add Group...", "Add Member..."};
+        String [] choose = {
+                getResources().getString(R.string.get_my_id),
+                getResources().getString(R.string.create_group),
+                getResources().getString(R.string.add_group),
+                getResources().getString(R.string.add_member)};
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setItems(choose, new DialogInterface.OnClickListener() {
                     @Override
@@ -252,7 +275,7 @@ public class GroupsFragment extends Fragment {
                 ClipData clip = ClipData.newPlainText("", editText.getText().toString());
                 clipboard.setPrimaryClip(clip);
                 builder.dismiss();
-                Toast.makeText(getContext(),"Your id was copied",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),getResources().getString(R.string.your_id_was_copied),Toast.LENGTH_SHORT).show();
             }
         });
         builder.setView(dialogView);
@@ -261,7 +284,7 @@ public class GroupsFragment extends Fragment {
 
     private void createNewGroupDialog(){
         if (Db.newInstance().getGroupArray().size()>=100){
-            Toast.makeText(getContext(),"There's a limit to 100 groups",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getResources().getString(R.string.theres_a_limit_to_100_groups),Toast.LENGTH_LONG).show();
         }else {
             fusedLocationProvider.getLastLocation().addOnSuccessListener(Objects.requireNonNull(getActivity()), new OnSuccessListener<Location>() {
                 @Override
@@ -284,7 +307,7 @@ public class GroupsFragment extends Fragment {
                         builder1.setView(dialogView);
                         builder1.show();
                     }else {
-                        Toast.makeText(getContext(),"Your last known location wasn't defined",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),getResources().getString(R.string.your_last_known_location_wasnt_defined),Toast.LENGTH_LONG).show();
                     }
                 }
             });

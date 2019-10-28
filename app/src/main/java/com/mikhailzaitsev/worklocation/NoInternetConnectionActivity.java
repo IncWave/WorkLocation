@@ -23,7 +23,6 @@ public class NoInternetConnectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_no_internet_connection);
-        setRepeatingAsyncTask(this);
     }
 
     private void setRepeatingAsyncTask(final NoInternetConnectionActivity activity){

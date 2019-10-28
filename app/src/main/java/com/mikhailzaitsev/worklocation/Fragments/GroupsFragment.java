@@ -28,9 +28,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.mikhailzaitsev.worklocation.Db.Db;
-import com.mikhailzaitsev.worklocation.Db.Group;
 import com.mikhailzaitsev.worklocation.Fragments.Additional.ExpandableListAdapter;
-import com.mikhailzaitsev.worklocation.MainActivity;
 import com.mikhailzaitsev.worklocation.R;
 
 import java.util.Objects;
@@ -44,7 +42,10 @@ public class GroupsFragment extends Fragment {
     private ImageButton editButton;
     private static boolean[] firstPressed = new boolean[]{true,true,true};
     private FusedLocationProviderClient fusedLocationProvider;
-    private String currentUserIdThatCouldBeShowed = "";
+    private String currentUserIdThatCouldBeShowed = "545QQi";
+
+    private ExpandableListView.OnChildClickListener onChildClickListener;
+    private AdapterView.OnItemLongClickListener onItemClickLongListener;
 
     private static final String ARG = "param1";
 
@@ -65,6 +66,15 @@ public class GroupsFragment extends Fragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        fusedLocationProvider = null;
+        listAdapter = null;
+        onChildClickListener = null;
+        onItemClickLongListener = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group, container, false);
@@ -81,7 +91,7 @@ public class GroupsFragment extends Fragment {
         setOnClickListener(addButton, listAdapter);
         setOnClickListener(editButton, listAdapter);
 
-        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        onChildClickListener = new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, final int groupN, final int itemN, long l) {
                 if (!firstPressed[0]){
@@ -103,8 +113,9 @@ public class GroupsFragment extends Fragment {
                 }
                 return false;
             }
-        });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        };
+
+        onItemClickLongListener = new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
                 if (!firstPressed[0]){
@@ -152,7 +163,10 @@ public class GroupsFragment extends Fragment {
                 }
                 return false;
             }
-        });
+        };
+
+        listView.setOnChildClickListener(onChildClickListener);
+        listView.setOnItemLongClickListener(onItemClickLongListener);
         return view;
     }
 
@@ -163,11 +177,11 @@ public class GroupsFragment extends Fragment {
                 switch (view.getId()){
                     case R.id.fragment_group_delete_button:
                         if (firstPressed[0]){
+                            if (isThereNoGroup()){break;}
                             addButton.setEnabled(false);
                             editButton.setEnabled(false);
                             deleteButton.setImageResource(R.drawable.delete_pink_48dp);
                             firstPressed[0] = !firstPressed[0];
-                            isMemberGroupExisting(Db.newInstance().getGroupArray().get(0));
                         }else {
                             deleteButton.setImageResource(R.drawable.delete_grey_48dp);
                             firstPressed[0] = !firstPressed[0];
@@ -191,6 +205,7 @@ public class GroupsFragment extends Fragment {
                         break;
                     case R.id.fragment_group_edit_button:
                         if (firstPressed[2]){
+                            if (isThereNoGroup()){break;}
                             deleteButton.setEnabled(false);
                             addButton.setEnabled(false);
                             editButton.setImageResource(R.drawable.edit_pink_48dp);
@@ -208,20 +223,14 @@ public class GroupsFragment extends Fragment {
         });
     }
 
-    <T>boolean isMemberGroupExisting(T memberOrGroup){
-        boolean Q = true;
-        if (memberOrGroup.getClass() == Group.class){
-
-            Toast.makeText(getContext(),"TRRRRRUE",Toast.LENGTH_SHORT).show();
-        }else {
-
-            Toast.makeText(getContext(),"FFFFFFFFFFFFFFFFFFFFFFFFFFFFF",Toast.LENGTH_SHORT).show();
-        }
-        if (Q){
+    private boolean isThereNoGroup(){
+        try {
+            Db.newInstance().getGroupArray().get(0);
+        }catch (Exception e){
+            Toast.makeText(getContext(),"There're no groups here...",Toast.LENGTH_LONG).show();
             return true;
-        }else {
-            return false;
         }
+        return false;
     }
 
     private void createChooseDialog(){

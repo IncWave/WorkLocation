@@ -9,10 +9,18 @@ import com.mikhailzaitsev.worklocation.Fragments.GroupsFragment;
 import com.mikhailzaitsev.worklocation.Fragments.MapFragment;
 
 public class CheckLocalDbChanged extends AsyncTask<Fragment,Void,Void> {
+    private MapFragment mapFragment;
+    private GroupsFragment groupsFragment;
     @Override
     protected Void doInBackground(Fragment... fragments) {
-        MapFragment mapFragment = (MapFragment) fragments[0];
-        GroupsFragment groupsFragment = (GroupsFragment) fragments[1];
+        mapFragment = (MapFragment) fragments[0];
+        groupsFragment = (GroupsFragment) fragments[1];
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
         if (Db.newInstance().isDataHasBeenChanged()){
             mapFragment.dataHasBeenChanged();
             groupsFragment.dataHasBeenChanged();
@@ -22,6 +30,5 @@ public class CheckLocalDbChanged extends AsyncTask<Fragment,Void,Void> {
             groupsFragment.dataHasBeenChanged();
             Db.newInstance().setOnlineHasBeenChanged(false);
         }
-        return null;
     }
 }

@@ -41,7 +41,6 @@ import com.mikhailzaitsev.worklocation.Db.Group;
 import com.mikhailzaitsev.worklocation.Fragments.Additional.GeofenceBroadcastReceiver;
 import com.mikhailzaitsev.worklocation.R;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -106,6 +105,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 ////////////////////////////////////////////////////////////////////////----permission
 
     public void dataHasBeenChanged(){
+        try {
+            arrayListGroups.get(0);
+        }catch (Exception e){
+            googleMap.clear();
+            return;
+        }
         initMapWithGeofencings();
         initMapWithMarkersAndCircles();
     }
@@ -127,6 +132,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        googleMap.clear();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
@@ -141,6 +152,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                seekBar.setVisibility(SeekBar.GONE);
                 saveButton.setVisibility(View.INVISIBLE);
                 arrayListGroups = Db.newInstance().saveCirclesChanges(circleArrayList);
                 dataHasBeenChanged();
@@ -198,7 +210,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         googleMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
             @Override
             public void onCircleClick(final Circle circle) {
-
+                seekBar.setVisibility(SeekBar.VISIBLE);
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

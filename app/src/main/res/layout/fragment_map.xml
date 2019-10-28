@@ -13,6 +13,7 @@
     <SeekBar
         android:id="@+id/fragment_map_change_radius"
         android:layout_width="250dp"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginTop="30dp"

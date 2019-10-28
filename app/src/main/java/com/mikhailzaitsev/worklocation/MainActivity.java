@@ -17,7 +17,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -42,7 +44,10 @@ public class MainActivity extends FragmentActivity {
     private ImageButton goSecondFragmentButton;
     private ImageButton goFirstFragmentButton;
     private ImageButton goZeroFragmentButton;
+
     private ViewPager viewPager;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     private GroupsFragment groupsFragment;
     private MapFragment mapFragment;
@@ -54,7 +59,7 @@ public class MainActivity extends FragmentActivity {
     private static Location currentUserLocation;
 
     //AsyncTask
-    Timer timer;
+    Timer timerDb;
     Timer timerInternet;
     boolean flag = false;
 
@@ -107,15 +112,19 @@ public class MainActivity extends FragmentActivity {
 
         groupsFragment = GroupsFragment.newInstance(calculateCurrentUserIdThatCouldBeShowed());
         mapFragment = MapFragment.newInstance();
-
-        setRepeatingAsyncTask(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         Db.newInstance();
-        setRepeatingAsyncTask(this);
+        setRepeatingAsyncTaskDb(this);
+        setRepeatingAsyncTaskInternet(this);
     }
 
     @Override
@@ -123,58 +132,60 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
         Db.newInstance().deleteDb();
         System.gc();
+        viewPager.clearOnPageChangeListeners();
+        locationManager.removeUpdates(locationListener);
+        locationListener = null;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        timer.cancel();
-        timer.purge();
+        timerDb.cancel();
+        timerDb.purge();
         timerInternet.cancel();
         timerInternet.purge();
-        timer = null;
+        timerDb = null;
         timerInternet = null;
     }
 
 
 
-    private void setRepeatingAsyncTask(final MainActivity activity){
-        timer = new Timer();
-        timerInternet = new Timer();
+    private void setRepeatingAsyncTaskDb(final MainActivity activity) {
+        timerDb = new Timer();
 
-        TimerTask timeTask = new TimerTask() {
+        TimerTask timerTaskDb = new TimerTask() {
             @Override
             public void run() {
                 try {
-                    CheckLocalDbChanged taskCheck = new CheckLocalDbChanged();
-                    taskCheck.doInBackground(mapFragment,groupsFragment);
-                }catch (Exception e){
+                    new CheckLocalDbChanged().execute(mapFragment, groupsFragment);
+                } catch (Exception e) {
+                    Log.e("TAG","DataBase changes checking error(Exception) " + e.getMessage());
                 }
             }
         };
-        timer.schedule(timeTask, 0,30000);
 
-        final CheckInternetConnectionMain checkInternetConnectionMain = new CheckInternetConnectionMain(activity);
+        timerDb.schedule(timerTaskDb, 0, 2000);
+    }
+
+
+    private void setRepeatingAsyncTaskInternet(final MainActivity activity){
+        timerInternet = new Timer();
         TimerTask timeTaskInternet = new TimerTask() {
             @Override
             public void run() {
                 try {
                     if (flag){
-                        timerInternet.cancel();
-                        timerInternet.purge();
-                        timer.cancel();
-                        timer.purge();
                         activity.startActivity(new Intent(activity, NoInternetConnectionActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     }else {
-                        checkInternetConnectionMain.doInBackground();
+                        new CheckInternetConnectionMain(activity).execute();
                     }
                 }catch (Exception e){
-                    //
-                    //
+                    Log.e("TAG","Internet connection checking error(Exception) " + e.getMessage());
                 }
             }
         };
-        timerInternet.schedule(timeTaskInternet, 0,2000);
+
+        timerInternet.schedule(timeTaskInternet, 0,3000);
     }
 
     private void showSignInActivity() {
@@ -247,8 +258,8 @@ public class MainActivity extends FragmentActivity {
         setCurrentUserId("RdKxPTuHXRdNENmEd6vrg15dzTs1");
         setCurrentUserName("Mikhail Zaitsev");
         setCurrentUserUri(Uri.parse("dfdf"));
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Objects.requireNonNull(locationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, new LocationListener() {
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 Db.newInstance().setLocation(location);
@@ -266,7 +277,8 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onProviderDisabled(String provider) {
             }
-        });
+        };
+        Objects.requireNonNull(locationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, locationListener);
     }
 
 

@@ -16,7 +16,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         ArrayList<String> idOfTriggered = new ArrayList<>();
-        Boolean inOrNot;
+        boolean inOrNot;
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()){
             Log.d("TAG", "GeofenceBroadcastReceiver has an error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -25,11 +25,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
         List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL){
-            inOrNot = true;
-        }else {
-            inOrNot = false;
-        }
+        inOrNot = geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL;
         for (int i = 0; i <triggeringGeofences.size(); i++){
             idOfTriggered.add(triggeringGeofences.get(i).getRequestId());
         }

@@ -17,6 +17,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<Group> groupArrayList;
 
+    LayoutInflater inflaterGroup;
+    LayoutInflater inflaterChild;
+
     public ExpandableListAdapter(Context context, ArrayList<Group> groupArrayList) {
         this.context = context;
         this.groupArrayList = groupArrayList;
@@ -84,8 +87,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(final int groupN, boolean b, View view, ViewGroup viewGroup) {
         if(view == null){
-            LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.list_group,null);
+            inflaterGroup = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflaterGroup.inflate(R.layout.list_group,null);
         }
         TextView id = view.findViewById(R.id.id_group);
         id.setText(String.valueOf(getGroup(groupN).getGroupId()));
@@ -101,8 +104,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(final int groupN, final int itemN, boolean b, View view, ViewGroup viewGroup) {
         if (view == null){
-            LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.list_item,null);
+            inflaterChild = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflaterChild.inflate(R.layout.list_item,null);
         }
 
         TextView id = view.findViewById(R.id.id_item);
@@ -123,4 +126,5 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public void theDeleteButtonChanged(){
         notifyDataSetChanged();
     }
+
 }

@@ -2,6 +2,7 @@ package com.mikhailzaitsev.worklocation.Db;
 
 import android.location.Location;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.Circle;
 import com.google.firebase.database.DataSnapshot;
@@ -94,21 +95,45 @@ public class Db {
         return "";
     }
 
-    public void deleteMember(int group, int member){
-        groupArrayList.get(group).getMembers().remove(member);
-        dataHasBeenChanged = true;
-    }
-
-    public void deleteGroupById(String group){
-        Long id = Long.valueOf(group);
-        for (Group group1 : groupArrayList){
-            if (id.equals(group1.getGroupId())){
-                groupArrayList.remove(group1);
-                break;
-            }
+    public void deleteMemberById(String groupId, String memberId){
+        try {
+            int groupIndex = findGroupIndex(groupId);
+            groupArrayList.get(groupIndex).getMembers().remove(findMemberIndex(groupIndex,memberId));
+        }catch (Exception e){
+            Log.e("TAG","ERROR at DB.deleteGroupById :" + e.getMessage());
         }
         dataHasBeenChanged = true;
     }
+
+    public void deleteGroupById(String groupId){
+        try {
+            groupArrayList.remove(findGroupIndex(groupId));
+        }catch (Exception e){
+            Log.e("TAG","ERROR at DB.deleteGroupById :" + e.getMessage());
+        }
+        dataHasBeenChanged = true;
+    }
+
+    private int findMemberIndex(int groupIndex,String memberId){
+        Long id = Long.valueOf(memberId);
+        for (int i = 0; i < groupArrayList.get(groupIndex).getMemberSize(); i++) {
+            if (id.equals(groupArrayList.get(groupIndex).getMembers().get(i).getMemberId())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private int findGroupIndex(String groupId){
+        Long id = Long.valueOf(groupId);
+        for (int i = 0; i < groupArrayList.size(); i++) {
+            if (id.equals(groupArrayList.get(i).getGroupId())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 
     public void changeGroupById(String groupId, String name){
         Long id = Long.valueOf(groupId);
@@ -139,7 +164,7 @@ public class Db {
 
     public void createGroup(String groupName, int radius){
         groupArrayList.add(new Group(
-                Math.round( + radius + Calendar.getInstance().getTimeInMillis())/41
+                Math.round(radius + Calendar.getInstance().getTimeInMillis())/41
                 ,groupName
                 ,createMember()
                 ,location.getLatitude()
@@ -176,12 +201,33 @@ public class Db {
 
             }
         });*/
-        groupArrayList.add(new Group(0,"zero", downloadGroup(),53.894810,27.509498,50));
+        groupArrayList.add(new Group(111,"1", downloadGroup(),53.894810,27.509498,50));
+        groupArrayList.add(new Group(222,"2", downloadGroup1(),53.894810,27.509198,60));
+        groupArrayList.add(new Group(333,"3", downloadGroup2(),53.894110,27.509900,70));
     }
 
     private ArrayList<Group.Member> downloadGroup(){
         ArrayList<Group.Member> array = new ArrayList<>();
-        array.add(new Group.Member(0,"Mikhail Zaitsev", Uri.parse("an"),false,"RdKxPTuHXRdNENmEd6vrg15dzTs1"));
+        array.add(new Group.Member(1,"1", Uri.parse("an"),false,"RdKxfPTuHXRdNENmEd6vrg15dzTs1"));
+        array.add(new Group.Member(2,"2", Uri.parse("and"),false,"asdasdsadasdENmEgd6vrg15dzyf"));
+        array.add(new Group.Member(3,"3", Uri.parse("an2d"),false,"asdasdsadasdEzNmEd6vwwqrg15dzyf"));
+        array.add(new Group.Member(4,"4", Uri.parse("awnd"),false,"asdasdsew3adaszdENmEd6vrg15dzyf"));
+        return array;
+    }
+    private ArrayList<Group.Member> downloadGroup1(){
+        ArrayList<Group.Member> array = new ArrayList<>();
+        array.add(new Group.Member(5,"5", Uri.parse("an1"),false,"RdKxPTuHXRdNEcNmEd6vrg15dzgTs1"));
+        array.add(new Group.Member(6,"6", Uri.parse("and2"),false,"asdasdsadasvdENmEd6vrg15fdzyf"));
+        array.add(new Group.Member(7,"7", Uri.parse("an2d3"),false,"asdasdsadhasdENmEd2116dvwwqrg15dzyf"));
+        array.add(new Group.Member(8,"8", Uri.parse("awnd4"),false,"asdasdse7w3adasdEN1mE2d6vbrg15dzyf"));
+        return array;
+    }
+    private ArrayList<Group.Member> downloadGroup2(){
+        ArrayList<Group.Member> array = new ArrayList<>();
+        array.add(new Group.Member(9,"9", Uri.parse("an5"),false,"RdKxPTuHX9RdNENm56Ed6vrg15dzTs1"));
+        array.add(new Group.Member(10,"10", Uri.parse("an6d"),false,"asdas7dsadasdE3Nm5Ed6vrg15dzyf"));
+        array.add(new Group.Member(11,"11", Uri.parse("an72d"),false,"asd1asdsadas2dENm7Ed6vwwqrg15dzyf"));
+        array.add(new Group.Member(12,"12", Uri.parse("aw8nd"),false,"as2dasdsew31adasdE8NmEd6vrg15dzyf"));
         return array;
     }
 

@@ -85,7 +85,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(final int groupN, boolean b, View view, ViewGroup viewGroup) {
+    public View getGroupView(int groupN, boolean b, View view, ViewGroup viewGroup) {
         if(view == null){
             inflaterGroup = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflaterGroup.inflate(R.layout.list_group,null);
@@ -102,14 +102,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(final int groupN, final int itemN, boolean b, View view, ViewGroup viewGroup) {
+    public View getChildView(int groupN, int itemN, boolean b, View view, ViewGroup viewGroup) {
         if (view == null){
             inflaterChild = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflaterChild.inflate(R.layout.list_item,null);
         }
 
-        TextView id = view.findViewById(R.id.id_item);
-        id.setText(String.valueOf(getGroup(groupN).getMembers().get(itemN).getMemberId()));
+        TextView idGroup = view.findViewById(R.id.list_item_id_group);
+        idGroup.setText(String.valueOf(getGroup(groupN).getGroupId()));
+
+        TextView idChild = view.findViewById(R.id.list_item_id_item);
+        idChild.setText(String.valueOf(getGroup(groupN).getMembers().get(itemN).getMemberId()));
 
         TextView itemNameTextView = view.findViewById(R.id.list_item_name);
         itemNameTextView.setText(getGroup(groupN).getMembers().get(itemN).getMemberName());

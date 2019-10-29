@@ -63,6 +63,7 @@ public class GroupsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
+        listAdapter = new ExpandableListAdapter(getContext(), Db.newInstance().getGroupArray());
     }
 
     @Override
@@ -73,19 +74,17 @@ public class GroupsFragment extends Fragment {
     }
 
 
-    private EditText editText;
-    private String idText;
-    private View view;
+
+
     @Override
-    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull final View view1, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
-        view = view1;
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull final View view, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
 
         ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
         assert info != null;
         int type = ExpandableListView.getPackedPositionType(info.packedPosition);
-        int group = ExpandableListView.getPackedPositionGroup(info.packedPosition);
-        int child = ExpandableListView.getPackedPositionChild(info.packedPosition);
+        final int group = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+        final int child = ExpandableListView.getPackedPositionChild(info.packedPosition);
 
         if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP){
             if (!firstPressed[0]){
@@ -94,8 +93,7 @@ public class GroupsFragment extends Fragment {
                 alertDialogDelete.setButton(AlertDialog.BUTTON_POSITIVE, view.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        TextView id = view.findViewById(R.id.id_group);
-                        Db.newInstance().deleteGroupById(id.getText().toString());
+                        Db.newInstance().deleteGroupByIndex(group);
                         listAdapter.notifyDataSetChanged();
                     }
                 });
@@ -114,18 +112,16 @@ public class GroupsFragment extends Fragment {
                 // set the custom layout
                 View customDialog = getLayoutInflater().inflate(R.layout.edit_dialog,null);
                 alertDialogEdit.setView(customDialog);
-                editText = customDialog.findViewById(R.id.edit_dialog_text);
+                final EditText editText = customDialog.findViewById(R.id.edit_dialog_text);
 
-                TextView idTextView = view.findViewById(R.id.id_group);
-                idText = String.valueOf(idTextView.getText());
-                String nameBefore = Db.newInstance().getGroupNameById(idText);
+                String nameBefore = Db.newInstance().getGroupNameByIndex(group);
                 editText.setText(nameBefore);
 
                 //add a button
                 alertDialogEdit.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Db.newInstance().changeGroupById(idText,editText.getText().toString());
+                        Db.newInstance().changeGroupNameByIndex(group,editText.getText().toString());
                         listAdapter.notifyDataSetChanged();
                     }
                 });
@@ -134,19 +130,13 @@ public class GroupsFragment extends Fragment {
 
 
         }else if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
-            TextView idGroup  = view.findViewById(R.id.list_item_id_group);
-            TextView idMember = view.findViewById(R.id.list_item_id_item);
-            Toast.makeText(getContext(),"CHILD  g:" + idGroup.getText() + " M:" + idMember.getText(),Toast.LENGTH_LONG).show();
             if (!firstPressed[0]){
                 AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
                 alertDialog.setMessage(view.getResources().getString(R.string.sure_delete_m));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, view.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        TextView idGroup = view.findViewById(R.id.list_item_id_group);
-                        TextView idMember = view.findViewById(R.id.list_item_id_item);
-                        Toast.makeText(getContext(),"CHILD  m:" + idMember.getText() + "  g:" + idGroup.getText(),Toast.LENGTH_SHORT).show();
-                        Db.newInstance().deleteMemberById(idGroup.getText().toString(),idMember.getText().toString());
+                        Db.newInstance().deleteMemberByIndex(group,child);
                         listAdapter.notifyDataSetChanged();
                     }
                 });
@@ -171,7 +161,6 @@ public class GroupsFragment extends Fragment {
 
         ExpandableListView listView = view.findViewById(R.id.fragment_group_expendable_listview);
         registerForContextMenu(listView);
-        listAdapter = new ExpandableListAdapter(getContext(), Db.newInstance().getGroupArray());
         listView.setAdapter(listAdapter);
 
         setOnClickListener(deleteButton, listAdapter);

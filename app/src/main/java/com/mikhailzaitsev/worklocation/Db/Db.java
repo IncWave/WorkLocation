@@ -85,64 +85,22 @@ public class Db {
         db = null;
     }
 
-    public String getGroupNameById(String id){
-        Long groupId = Long.valueOf(id);
-        for (int i = 0; i<groupArrayList.size(); i++){
-            if (groupId.equals(groupArrayList.get(i).getGroupId())){
-                return groupArrayList.get(i).getGroupName();
-            }
-        }
-        return "";
+    public String getGroupNameByIndex(int groupIndex){
+        return groupArrayList.get(groupIndex).getGroupName();
     }
 
-    public void deleteMemberById(String groupId, String memberId){
-        try {
-            int groupIndex = findGroupIndex(groupId);
-            groupArrayList.get(groupIndex).getMembers().remove(findMemberIndex(groupIndex,memberId));
-        }catch (Exception e){
-            Log.e("TAG","ERROR at DB.deleteGroupById :" + e.getMessage());
-        }
+    public void deleteMemberByIndex(int groupI, int memberI){
+        groupArrayList.get(groupI).getMembers().remove(memberI);
         dataHasBeenChanged = true;
     }
 
-    public void deleteGroupById(String groupId){
-        try {
-            groupArrayList.remove(findGroupIndex(groupId));
-        }catch (Exception e){
-            Log.e("TAG","ERROR at DB.deleteGroupById :" + e.getMessage());
-        }
+    public void deleteGroupByIndex(int groupI){
+        groupArrayList.remove(groupI);
         dataHasBeenChanged = true;
     }
 
-    private int findMemberIndex(int groupIndex,String memberId){
-        Long id = Long.valueOf(memberId);
-        for (int i = 0; i < groupArrayList.get(groupIndex).getMemberSize(); i++) {
-            if (id.equals(groupArrayList.get(groupIndex).getMembers().get(i).getMemberId())) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private int findGroupIndex(String groupId){
-        Long id = Long.valueOf(groupId);
-        for (int i = 0; i < groupArrayList.size(); i++) {
-            if (id.equals(groupArrayList.get(i).getGroupId())) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-
-    public void changeGroupById(String groupId, String name){
-        Long id = Long.valueOf(groupId);
-        for (int i = 0; i<groupArrayList.size(); i++){
-            if (id.equals(groupArrayList.get(i).getGroupId())){
-                groupArrayList.get(i).setGroupName(name);
-                break;
-            }
-        }
+    public void changeGroupNameByIndex(int groupIndex, String name){
+        groupArrayList.get(groupIndex).setGroupName(name);
         dataHasBeenChanged = true;
     }
 

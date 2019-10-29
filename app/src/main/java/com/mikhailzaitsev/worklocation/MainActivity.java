@@ -17,7 +17,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,8 +24,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.LocationServices;
 import com.mikhailzaitsev.worklocation.Db.Db;
 import com.mikhailzaitsev.worklocation.Fragments.MapFragment;
 import com.mikhailzaitsev.worklocation.Fragments.GroupsFragment;
@@ -56,7 +53,6 @@ public class MainActivity extends FragmentActivity {
     private static String currentUserId;
     private static String currentUserName;
     private static Uri currentUserUri;
-    private static Location currentUserLocation;
 
     //AsyncTask
     Timer timerDb;
@@ -76,7 +72,6 @@ public class MainActivity extends FragmentActivity {
         /////////////////////////////////////////////showSignInActivity();
         DELETE_THIS();
 
-        GeofencingClient geofencingClient = LocationServices.getGeofencingClient(this);
 
         goZeroFragmentButton = findViewById(R.id.activity_main_go_zero_fragment_button);
         goFirstFragmentButton = findViewById(R.id.activity_main_go_first_fragment_button);
@@ -123,7 +118,7 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         Db.newInstance();
-        setRepeatingAsyncTaskDb(this);
+        setRepeatingAsyncTaskDb();
         setRepeatingAsyncTaskInternet(this);
     }
 
@@ -150,7 +145,7 @@ public class MainActivity extends FragmentActivity {
 
 
 
-    private void setRepeatingAsyncTaskDb(final MainActivity activity) {
+    private void setRepeatingAsyncTaskDb() {
         timerDb = new Timer();
 
         TimerTask timerTaskDb = new TimerTask() {
@@ -316,9 +311,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     private class CustomPagerAdapter extends FragmentPagerAdapter{
-
         CustomPagerAdapter(@NonNull FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
         @NonNull
         @Override
@@ -333,8 +327,6 @@ public class MainActivity extends FragmentActivity {
                     return groupsFragment;
             }
         }
-
-
         @Override
         public int getCount() {
             return 3;
@@ -347,25 +339,19 @@ public class MainActivity extends FragmentActivity {
         return currentUserId;
     }
     private void setCurrentUserId(String currentUserId) {
-        this.currentUserId = currentUserId;
+        MainActivity.currentUserId = currentUserId;
     }
     public static String getCurrentUserName() {
         return currentUserName;
     }
     private void setCurrentUserName(String currentUserName) {
-        this.currentUserName = currentUserName;
+        MainActivity.currentUserName = currentUserName;
     }
     public static Uri getCurrentUserUri() {
         return currentUserUri;
     }
     private void setCurrentUserUri(Uri currentUserUri) {
-        this.currentUserUri = currentUserUri;
-    }
-    private static Location getCurrentUserLocation(){
-        return currentUserLocation;
-    }
-    public void setCurrentUserLocation(Location currentUserLocation) {
-        MainActivity.currentUserLocation = currentUserLocation;
+        MainActivity.currentUserUri = currentUserUri;
     }
 
     public void sendNotification(String whatGeofences){

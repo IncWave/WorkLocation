@@ -90,8 +90,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             inflaterGroup = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflaterGroup.inflate(R.layout.list_group,null);
         }
-        TextView id = view.findViewById(R.id.id_group);
-        id.setText(String.valueOf(getGroup(groupN).getGroupId()));
+
         TextView groupName = view.findViewById(R.id.list_group_name);
         groupName.setText(getGroup(groupN).getGroupName());
         TextView groupNumberOfMembers = view.findViewById(R.id.list_group_number_of_online);
@@ -107,12 +106,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             inflaterChild = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflaterChild.inflate(R.layout.list_item,null);
         }
-
-        TextView idGroup = view.findViewById(R.id.list_item_id_group);
-        idGroup.setText(String.valueOf(getGroup(groupN).getGroupId()));
-
-        TextView idChild = view.findViewById(R.id.list_item_id_item);
-        idChild.setText(String.valueOf(getGroup(groupN).getMembers().get(itemN).getMemberId()));
 
         TextView itemNameTextView = view.findViewById(R.id.list_item_name);
         itemNameTextView.setText(getGroup(groupN).getMembers().get(itemN).getMemberName());

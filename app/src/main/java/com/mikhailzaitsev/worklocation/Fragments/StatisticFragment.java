@@ -15,13 +15,13 @@ import com.mikhailzaitsev.worklocation.R;
 public class StatisticFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
-    private String mParam1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam1 = getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -37,12 +37,8 @@ public class StatisticFragment extends Fragment {
     }
 
 
-    public static StatisticFragment newInstance(String param1) {
-        StatisticFragment fragment = new StatisticFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
-        return fragment;
+    public static StatisticFragment newInstance() {
+        return new StatisticFragment();
     }
 
 }

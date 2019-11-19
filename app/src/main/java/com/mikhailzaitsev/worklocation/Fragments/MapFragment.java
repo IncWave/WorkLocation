@@ -1,10 +1,7 @@
 package com.mikhailzaitsev.worklocation.Fragments;
 
 import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,7 +10,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -58,6 +54,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
    private GeofencingClient geofencingClient;
    private ArrayList <Geofence> geofenceArrayList;
    private PendingIntent pendingIntent;
+   private float z = 0.1f;
 
 ////////////////////////////////////////////////////////////////////////permission----
     private void getLocationPermission(){
@@ -106,6 +103,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     public void dataHasBeenChanged(){
         try {
+            //noinspection ResultOfMethodCallIgnored
             arrayListGroups.get(0);
         }catch (Exception e){
             googleMap.clear();
@@ -118,7 +116,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     public static MapFragment newInstance() {
         return new MapFragment();
-    } //New Instance
+    }
 
     public MapFragment() {
         // Required empty public constructor
@@ -127,6 +125,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         geofencingClient = LocationServices.getGeofencingClient(Objects.requireNonNull(getContext()));
         arrayListGroups = Db.newInstance().getGroupArray();
     }
@@ -198,11 +197,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private Circle drawCircle(Group group, int i){
-
+        z += 0.1f;
         Circle circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(group.getLatitude(),
                         group.getLongitude()))
                 .radius(group.getRadius())
+                .zIndex(z)
                 .clickable(true));
         circle.setTag(i);
         drawMarker(circle,group);

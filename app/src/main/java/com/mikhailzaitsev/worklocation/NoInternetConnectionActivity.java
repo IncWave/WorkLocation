@@ -35,7 +35,7 @@ public class NoInternetConnectionActivity extends AppCompatActivity {
                     if (flag){
                         timerInternet.cancel();
                         timerInternet.purge();
-                        activity.startActivity(new Intent(activity, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        activity.startActivity(new Intent(activity, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                     }
                     else {
                         checkInternetConnectionNoInternet.doInBackground();

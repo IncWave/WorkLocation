@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "297928001460",
-    "firebase_url": "https://worklocation-88mz.firebaseio.com",
-    "project_id": "worklocation-88mz",
-    "storage_bucket": "worklocation-88mz.appspot.com"
+    "project_number": "298853125343",
+    "firebase_url": "https://worklocation-696-db.firebaseio.com",
+    "project_id": "worklocation-696-db",
+    "storage_bucket": "worklocation-696-db.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:297928001460:android:5f9fe595832da44f7414e1",
+        "mobilesdk_app_id": "1:298853125343:android:9775b0a20777f4a95a6d6a",
         "android_client_info": {
           "package_name": "com.mikhailzaitsev.worklocation"
         }
       },
       "oauth_client": [
         {
-          "client_id": "297928001460-1hnf3qo2hbeumm42897iv80jfb8ld6sk.apps.googleusercontent.com",
+          "client_id": "298853125343-d5akr54v3vt6uu5q8vcsjveogal7vho8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mikhailzaitsev.worklocation",
+            "certificate_hash": "49431dd37d17517ee65a71ce33f926b40d3ba844"
+          }
+        },
+        {
+          "client_id": "298853125343-2ahicrb0ndr4bevfin18hn5lfn0s71th.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBl7bNCZT0PdNtKPlCI7Oj1KWeOR2iqPWQ"
+          "current_key": "AIzaSyA0Vj_Sa8C30zGsqSlGdUj27EDG2aTpbV0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "297928001460-1hnf3qo2hbeumm42897iv80jfb8ld6sk.apps.googleusercontent.com",
+              "client_id": "298853125343-2ahicrb0ndr4bevfin18hn5lfn0s71th.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

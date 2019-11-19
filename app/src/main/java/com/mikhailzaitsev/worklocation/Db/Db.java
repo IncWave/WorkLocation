@@ -2,7 +2,6 @@ package com.mikhailzaitsev.worklocation.Db;
 
 import android.location.Location;
 import android.net.Uri;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.Circle;
 import com.google.firebase.database.DataSnapshot;

@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,8 +46,6 @@ public class GroupsFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationProvider;
     private String currentUserIdThatCouldBeShowed = "545QQi";
 
-    private static final String ARG = "param1";
-
 
     public GroupsFragment() {
     }
@@ -62,8 +59,21 @@ public class GroupsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
         listAdapter = new ExpandableListAdapter(getContext(), Db.newInstance().getGroupArray());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        firstPressed = new boolean[]{true,true,true};
+        deleteButton.setImageResource(R.drawable.delete_grey_48dp);
+        addButton.setImageResource(R.drawable.add_grey_48dp);
+        editButton.setImageResource(R.drawable.edit_grey_48dp);
+        deleteButton.setEnabled(true);
+        editButton.setEnabled(true);
+        addButton.setEnabled(true);
     }
 
     @Override
@@ -226,6 +236,7 @@ public class GroupsFragment extends Fragment {
 
     private boolean isThereNoGroup(){
         try {
+            //noinspection ResultOfMethodCallIgnored
             Db.newInstance().getGroupArray().get(0);
         }catch (Exception e){
             Toast.makeText(getContext(),"There're no groups here...",Toast.LENGTH_LONG).show();
@@ -283,7 +294,7 @@ public class GroupsFragment extends Fragment {
             public void onClick(View view) {
                 ClipboardManager clipboard = (ClipboardManager) Objects.requireNonNull(getContext()).getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("", editText.getText().toString());
-                clipboard.setPrimaryClip(clip);
+                Objects.requireNonNull(clipboard).setPrimaryClip(clip);
                 builder.dismiss();
                 Toast.makeText(getContext(),getResources().getString(R.string.your_id_was_copied),Toast.LENGTH_SHORT).show();
             }

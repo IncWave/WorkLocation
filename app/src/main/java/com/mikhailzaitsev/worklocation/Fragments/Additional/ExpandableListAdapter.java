@@ -17,9 +17,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<Group> groupArrayList;
 
-    LayoutInflater inflaterGroup;
-    LayoutInflater inflaterChild;
-
     public ExpandableListAdapter(Context context, ArrayList<Group> groupArrayList) {
         this.context = context;
         this.groupArrayList = groupArrayList;
@@ -87,8 +84,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupN, boolean b, View view, ViewGroup viewGroup) {
         if(view == null){
-            inflaterGroup = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflaterGroup.inflate(R.layout.list_group,null);
+            LayoutInflater inflaterGroup = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = Objects.requireNonNull(inflaterGroup).inflate(R.layout.list_group,null);
         }
 
         TextView groupName = view.findViewById(R.id.list_group_name);
@@ -103,8 +100,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupN, int itemN, boolean b, View view, ViewGroup viewGroup) {
         if (view == null){
-            inflaterChild = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflaterChild.inflate(R.layout.list_item,null);
+            LayoutInflater inflaterChild = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = Objects.requireNonNull(inflaterChild).inflate(R.layout.list_item,null);
         }
 
         TextView itemNameTextView = view.findViewById(R.id.list_item_name);

@@ -46,6 +46,7 @@ public class MainActivity extends FragmentActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+    private StatisticFragment statisticFragment;
     private GroupsFragment groupsFragment;
     private MapFragment mapFragment;
 
@@ -58,8 +59,6 @@ public class MainActivity extends FragmentActivity {
     Timer timerDb;
     Timer timerInternet;
     boolean flag = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +106,7 @@ public class MainActivity extends FragmentActivity {
 
         groupsFragment = GroupsFragment.newInstance(calculateCurrentUserIdThatCouldBeShowed());
         mapFragment = MapFragment.newInstance();
+        statisticFragment = StatisticFragment.newInstance();
     }
 
     @Override
@@ -123,13 +123,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Db.newInstance().deleteDb();
-        System.gc();
-        viewPager.clearOnPageChangeListeners();
-        locationManager.removeUpdates(locationListener);
-        locationListener = null;
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -142,6 +137,17 @@ public class MainActivity extends FragmentActivity {
         timerDb = null;
         timerInternet = null;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Db.newInstance().deleteDb();
+        System.gc();
+        viewPager.clearOnPageChangeListeners();
+        locationManager.removeUpdates(locationListener);
+        locationListener = null;
+    }
+
 
 
 
@@ -170,7 +176,7 @@ public class MainActivity extends FragmentActivity {
             public void run() {
                 try {
                     if (flag){
-                        activity.startActivity(new Intent(activity, NoInternetConnectionActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        activity.startActivity(new Intent(activity, NoInternetConnectionActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                     }else {
                         new CheckInternetConnectionMain(activity).execute();
                     }
@@ -319,7 +325,7 @@ public class MainActivity extends FragmentActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 2:
-                    return StatisticFragment.newInstance("Third");
+                    return statisticFragment;
                 case 1:
                     return mapFragment;
                 default:

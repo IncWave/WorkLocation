@@ -14,8 +14,6 @@ public class Group implements Parcelable{
     private double longitude;
     private ArrayList<Member> members;
 
-    Group(){ }
-
     Group(long groupId, String groupName, ArrayList<Member> members,double latitude, double longitude,int radius){
         setGroupId(groupId);
         setGroupName(groupName);
@@ -109,8 +107,6 @@ public class Group implements Parcelable{
         private long memberId;
         private Uri memberUri;
         private String memberIdFirebase;
-
-        Member(){}
 
         Member(long memberId, String memberName, Uri memberUri, boolean memberIsOnline, String memberIdFirebase) {
             setMemberIdFirebase(memberIdFirebase);

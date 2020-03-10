@@ -14,7 +14,7 @@ public class CheckInternetConnectionMain extends AsyncTask<Void,Void,Void> {
 
     private WeakReference<MainActivity> activityWeakReference;
 
-    CheckInternetConnectionMain(MainActivity activity){
+    public CheckInternetConnectionMain(MainActivity activity){
         activityWeakReference = new WeakReference<>(activity);
     }
 

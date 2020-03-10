@@ -1,6 +1,7 @@
-package com.mikhailzaitsev.worklocation;
+package com.mikhailzaitsev.worklocation.checking.internet;
 
 import android.os.AsyncTask;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
@@ -16,7 +17,7 @@ public class CheckInternetConnectionNoInternet extends AsyncTask<Void,Void,Void>
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    public Void doInBackground(Void... voids) {
         if (isOnline()){
             activityWeakReference.get().flag = true;
         }

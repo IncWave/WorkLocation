@@ -1,4 +1,4 @@
-package com.mikhailzaitsev.worklocation.Db;
+package com.mikhailzaitsev.worklocation.db;
 
 import android.net.Uri;
 import android.os.Parcel;

@@ -1,4 +1,4 @@
-package com.mikhailzaitsev.worklocation;
+package com.mikhailzaitsev.worklocation.checking;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,12 +11,15 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.mikhailzaitsev.worklocation.MainActivity;
+import com.mikhailzaitsev.worklocation.R;
+
 public class StartPermissionActivity extends AppCompatActivity {
     Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        intent = new Intent(this,MainActivity.class);
+        intent = new Intent(this, MainActivity.class);
 
         setContentView(R.layout.start_permission_activity);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {

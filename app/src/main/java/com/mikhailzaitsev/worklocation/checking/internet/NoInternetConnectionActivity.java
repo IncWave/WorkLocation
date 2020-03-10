@@ -1,9 +1,12 @@
-package com.mikhailzaitsev.worklocation;
+package com.mikhailzaitsev.worklocation.checking.internet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.mikhailzaitsev.worklocation.MainActivity;
+import com.mikhailzaitsev.worklocation.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,7 +14,7 @@ import java.util.TimerTask;
 public class NoInternetConnectionActivity extends AppCompatActivity {
 
     Timer timerInternet;
-    boolean flag = false;
+    public boolean flag = false;
 
     @Override
     protected void onStart() {

@@ -16,17 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NoInternetConnectionActivity"></activity>
-        <activity android:name=".StartPermissionActivity">
+        <activity android:name=".checking.internet.NoInternetConnectionActivity"/>
+
+        <activity android:name=".MainActivity" />
+
+        <activity android:name=".checking.StartPermissionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
         <category android:name="android.intent.category.LAUNCHER" />
     </intent-filter>
-</activity>
-<activity android:name=".MainActivity" />
+        </activity>
 
-        <receiver android:name=".Fragments.Additional.GeofenceBroadcastReceiver" />
+        <receiver android:name=".map.GeofenceBroadcastReceiver" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -24,10 +24,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.mikhailzaitsev.worklocation.Db.Db;
-import com.mikhailzaitsev.worklocation.Fragments.MapFragment;
-import com.mikhailzaitsev.worklocation.Fragments.GroupsFragment;
-import com.mikhailzaitsev.worklocation.Fragments.StatisticFragment;
+import com.mikhailzaitsev.worklocation.checking.db.CheckLocalDbChanged;
+import com.mikhailzaitsev.worklocation.checking.internet.CheckInternetConnectionMain;
+import com.mikhailzaitsev.worklocation.checking.internet.NoInternetConnectionActivity;
+import com.mikhailzaitsev.worklocation.db.Db;
+import com.mikhailzaitsev.worklocation.list.GroupsFragment;
+import com.mikhailzaitsev.worklocation.map.MapFragment;
+import com.mikhailzaitsev.worklocation.statistic.StatisticFragment;
 
 import java.util.List;
 import java.util.Objects;
@@ -58,7 +61,7 @@ public class MainActivity extends FragmentActivity {
     //AsyncTask
     Timer timerDb;
     Timer timerInternet;
-    boolean flag = false;
+    public boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

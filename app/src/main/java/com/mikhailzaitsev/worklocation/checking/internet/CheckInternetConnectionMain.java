@@ -1,6 +1,9 @@
-package com.mikhailzaitsev.worklocation;
+package com.mikhailzaitsev.worklocation.checking.internet;
 
 import android.os.AsyncTask;
+
+import com.mikhailzaitsev.worklocation.MainActivity;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;

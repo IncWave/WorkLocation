@@ -1,14 +1,11 @@
-package com.mikhailzaitsev.worklocation.Db;
+package com.mikhailzaitsev.worklocation.db;
 
 import android.location.Location;
 import android.net.Uri;
 
 import com.google.android.gms.maps.model.Circle;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mikhailzaitsev.worklocation.MainActivity;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.mikhailzaitsev.worklocation.Fragments;
+package com.mikhailzaitsev.worklocation.list;
 
 
 import android.app.AlertDialog;
@@ -29,9 +29,8 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.mikhailzaitsev.worklocation.Db.Db;
-import com.mikhailzaitsev.worklocation.Fragments.Additional.ExpandableListAdapter;
 import com.mikhailzaitsev.worklocation.R;
+import com.mikhailzaitsev.worklocation.db.Db;
 
 import java.util.Objects;
 

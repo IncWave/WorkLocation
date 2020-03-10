@@ -4,5 +4,5 @@
     android:background="@drawable/registration_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartPermissionActivity">
+    tools:context=".checking.StartPermissionActivity">
 </androidx.constraintlayout.widget.ConstraintLayout>
